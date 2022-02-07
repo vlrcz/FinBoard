@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Text">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Text.Head">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">@dimen/text_head</item>
+    </style>
+
+    <style name="Text.Head.L">
+        <item name="android:textSize">@dimen/text_head_l</item>
+    </style>
+
+    <style name="Text.Body">
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="Text.Body.L">
+        <item name="android:textSize">@dimen/text_body_l</item>
+    </style>
+
+</resources>
