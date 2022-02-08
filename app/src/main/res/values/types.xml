@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Text">
-        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/nunito_semibold</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="Text.Head">
-        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/nunito_bold</item>
         <item name="android:textSize">@dimen/text_head</item>
     </style>
 

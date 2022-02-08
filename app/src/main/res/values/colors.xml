@@ -3,15 +3,10 @@
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="textColor">#2E2E2E</color>
-    <color name="colorBody">#E5E5E5</color>
-    <color name="colorOnBody">#FFFFFFFF</color>
-    <color name="colorPrimary">#a5d6a7</color>
-    <color name="colorPrimaryDark">#75a478</color>
-    <color name="colorPrimaryLight">#D7FFD9</color>
-    <color name="colorSecondary">#66bb6a</color>
-    <color name="colorSecondaryDark">#338a3e</color>
-    <color name="colorSecondaryLight">#98EE99</color>
     <color name="color_transparent">#00000000</color>
+
+    <color name="colorPrimary">#4FB992</color>
+    <color name="colorPrimaryLight">#3F4652</color>
+    <color name="colorSecondary">#272C33</color>
 
 </resources>

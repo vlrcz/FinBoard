@@ -15,12 +15,16 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
-            style="@style/Text.Head"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="FinBoard" />
+            app:title="ФинБорд" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorPrimary" />
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
@@ -29,12 +33,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="доходы" />
+            android:text="РАСХОДЫ" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="расходы" />
+            android:text="ДОХОДЫ" />
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -42,6 +46,8 @@
         style="@style/Text.Head.L"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/nunito_bold"
         android:text="Hello World!" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -69,14 +75,17 @@
         android:id="@+id/button"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_marginTop="50dp"
+        android:text="Сохранить" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/large_margin"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="@dimen/large_margin"
-        android:hint="hint">
+        android:hint="hint"
+        app:boxBackgroundMode="filled">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -85,22 +94,23 @@
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <androidx.appcompat.widget.SearchView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
+        style="@style/Widget.Material3.FloatingActionButton.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        app:srcCompat="@drawable/ic_add" />
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:indeterminateTint="@color/colorPrimary" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
