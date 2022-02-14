@@ -3,14 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/FinBoard/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
-        <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_1.xml" value="0.36666666666666664" />
-        <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_blank.xml" value="0.36666666666666664" />
-        <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_detail.xml" value="0.36666666666666664" />
-        <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_main.xml" value="0.36666666666666664" />
         <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_tab.xml" value="0.36666666666666664" />
-        <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_test.xml" value="0.36666666666666664" />
-        <entry key="..\:/FinBoard/app/src/main/res/layout/test_fragment.xml" value="0.75" />
       </map>
     </option>
   </component>

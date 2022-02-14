@@ -9,6 +9,10 @@ import com.vlad.finboard.navigation.NavigatorHolder
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), NavigatorHolder {
 
+    companion object {
+        const val TAB_FRAGMENT = "tab"
+    }
+
     lateinit var navigator: Navigator
 
     override fun navigator(): Navigator {
@@ -21,7 +25,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), NavigatorHolder 
         navigator = Navigator(this)
 
         if (savedInstanceState == null) {
-            navigator.navigate(FragmentScreen(TabFragment(), "tab"))
+            navigator.navigate(FragmentScreen(TabFragment(), TAB_FRAGMENT))
         }
     }
 }

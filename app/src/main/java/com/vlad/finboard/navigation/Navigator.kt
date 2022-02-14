@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.vlad.finboard.R
 import com.vlad.finboard.navigation.screen.FragmentScreen
-import com.vlad.finboard.navigation.screen.Screen
+import com.vlad.finboard.navigation.screen.NavigationScreen
 
 open class Navigator(
     private val activity: FragmentActivity,
@@ -17,7 +17,7 @@ open class Navigator(
         fragmentManager.popBackStack()
     }
 
-    open fun navigate(screen: Screen): Boolean {
+    open fun navigate(screen: NavigationScreen): Boolean {
         return when (screen) {
             is FragmentScreen -> {
                 fragmentManager.replace(containerId, screen.fragment, screen.tag)
@@ -26,9 +26,19 @@ open class Navigator(
             else -> false
         }
     }
+
+    private fun FragmentManager.replace(containerId: Int, fragment: Fragment, tag: String) {
+        with(this) {
+            beginTransaction()
+                .setPrimaryNavigationFragment(fragment)
+                .addToBackStack(tag)
+                .replace(containerId, fragment)
+                .commit()
+        }
+    }
 }
 
-fun Fragment.navigate(screen: Screen) {
+fun Fragment.navigate(screen: NavigationScreen) {
     var parent = parentFragment
     while (parent != null) {
         if (parent is NavigatorHolder) {
@@ -41,15 +51,5 @@ fun Fragment.navigate(screen: Screen) {
     val activity = activity
     if (activity is NavigatorHolder) {
         activity.navigator().navigate(screen)
-    }
-}
-
-fun FragmentManager.replace(containerId: Int, fragment: Fragment, tag: String) {
-    with(this) {
-        beginTransaction()
-            .setPrimaryNavigationFragment(fragment)
-            .addToBackStack(tag)
-            .replace(containerId, fragment)
-            .commit()
     }
 }

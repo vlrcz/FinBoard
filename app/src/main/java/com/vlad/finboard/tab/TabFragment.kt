@@ -16,21 +16,23 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
     private val binding: FragmentTabBinding by viewBinding(FragmentTabBinding::bind)
     lateinit var navigator: Navigator
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        navigator = TabFragmentNavigator(this)
-    }
-
     override fun navigator(): Navigator {
         return navigator
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        back()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        navigator = TabFragmentNavigator(this)
     }
 
-    private fun back() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        onBackPressed()
+    }
+
+    private fun onBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
             OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
