@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="FinBoard.Button" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:textAppearance">@style/Text.Body.L</item>
+    </style>
+
+    <style name="FinBoard.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="hintTextAppearance">@style/Text.Body.L</item>
+    </style>
+
+    <style name="FinBoard.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabTextAppearance">@style/Text.Body</item>
+        <item name="tabTextColor">@color/white</item>
+        <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+    </style>
+
+    <style name="FinBoard.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/Text.Head</item>
+        <item name="titleTextColor">@color/white</item>
+    </style>
+
+</resources>
