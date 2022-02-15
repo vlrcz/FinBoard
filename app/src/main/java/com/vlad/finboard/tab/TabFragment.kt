@@ -29,19 +29,19 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onBackPressed()
+        bindOnBackPressedCallback()
     }
 
-    private fun onBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
-            OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (childFragmentManager.backStackEntryCount > 1) {
-                    navigator.back()
-                } else {
-                    requireActivity().finish()
+    private fun bindOnBackPressedCallback() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (childFragmentManager.backStackEntryCount > 1) {
+                        navigator.back()
+                    } else {
+                        requireActivity().finish()
+                    }
                 }
-            }
-        })
+            })
     }
 }
