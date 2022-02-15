@@ -17,20 +17,3 @@ data class CategoryEntity(
         const val TABLE_NAME = "categories"
     }
 }
-
-/*
-CAFE,
-TOURISM,
-FOOD,
-TECHNICS,
-HEALTH,
-CLOTHES,
-GAMES,
-SPORT,
-RENTAL,
-
-SALARY,
-DEPOSITS,
-GRANTS,
-PENSION,
-RENTAL*/
