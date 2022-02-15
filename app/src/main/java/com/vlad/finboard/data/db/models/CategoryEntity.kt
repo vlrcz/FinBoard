@@ -1,6 +1,5 @@
 package com.vlad.finboard.data.db.models
 
-import androidx.annotation.ColorRes
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -9,11 +8,10 @@ import androidx.room.PrimaryKey
 )
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Int,
     val name: String,
     val type: String,
-    @ColorRes
-    val color: Int
+    val color: String
 ) {
     companion object {
         const val TABLE_NAME = "categories"
@@ -28,4 +26,11 @@ TECHNICS,
 HEALTH,
 CLOTHES,
 GAMES,
-SPORT*/
+SPORT,
+RENTAL,
+
+SALARY,
+DEPOSITS,
+GRANTS,
+PENSION,
+RENTAL*/

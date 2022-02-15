@@ -17,6 +17,7 @@ interface AppComponent {
 
     fun notesDao(): NotesDao
     fun categoriesDao(): CategoriesDao
+    fun finboardDatabase(): FinboardDatabase
     fun inject(app: App)
 
     @Component.Factory

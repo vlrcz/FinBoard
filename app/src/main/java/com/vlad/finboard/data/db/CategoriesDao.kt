@@ -9,8 +9,6 @@ import com.vlad.finboard.data.db.models.CategoryEntity
 @Dao
 interface CategoriesDao {
 
-    fun init() {}
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCategory(category: CategoryEntity)
 

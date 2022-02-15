@@ -4,7 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.vlad.finboard.data.db.models.CategoryEntity
 import com.vlad.finboard.data.db.models.NoteEntity
-import javax.inject.Singleton
 
 @Database(
     entities = [

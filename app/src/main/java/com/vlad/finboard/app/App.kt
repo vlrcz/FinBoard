@@ -3,21 +3,15 @@ package com.vlad.finboard.app
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
-import androidx.room.DatabaseConfiguration
-import androidx.room.RoomDatabase
 import androidx.viewbinding.BuildConfig
-import com.vlad.finboard.R
 import com.vlad.finboard.data.db.FinboardDatabase
 import com.vlad.finboard.data.db.models.CategoryEntity
-import com.vlad.finboard.data.db.models.NotesType
 import com.vlad.finboard.di.AppComponent
 import com.vlad.finboard.di.DaggerAppComponent
 import javax.inject.Inject
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class App: Application() {
+class App : Application() {
 
     lateinit var appComponent: AppComponent
 
@@ -42,11 +36,11 @@ class App: Application() {
             .create(this, this)
         appComponent.inject(this)
 
-        //пример
-        val cat = CategoryEntity(2, "SPORT", NotesType.COSTS.toString(), R.color.purple_500)
-        GlobalScope.launch {
-            database.categoriesDao().insertCategory(cat)
-        }
+        initDb()
+    }
+
+    private fun initDb() {
+        database.query("select * from ${CategoryEntity.TABLE_NAME}", null)
     }
 }
 
