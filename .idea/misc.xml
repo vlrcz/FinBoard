@@ -6,7 +6,9 @@
         <entry key="..\:/FinBoard/app/src/main/res/drawable/ic_add.xml" value="0.2555" />
         <entry key="..\:/FinBoard/app/src/main/res/drawable/ic_cafe.xml" value="0.2555" />
         <entry key="..\:/FinBoard/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_add_note.xml" value="0.36666666666666664" />
         <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_costs.xml" value="0.36666666666666664" />
+        <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_income.xml" value="0.36666666666666664" />
         <entry key="..\:/FinBoard/app/src/main/res/layout/fragment_tab.xml" value="0.33" />
         <entry key="..\:/FinBoard/app/src/main/res/layout/item_category.xml" value="0.36666666666666664" />
         <entry key="..\:/FinBoard/app/src/main/res/layout/item_date.xml" value="0.36666666666666664" />

@@ -2,4 +2,6 @@
     <string name="app_name">FinBoard</string>
     <string name="tab_costs">РАСХОДЫ</string>
     <string name="tab_income">ДОХОДЫ</string>
+    <string name="sum_txt_input">Сумма</string>
+    <string name="save_btn_txt">Сохранить</string>
 </resources>
