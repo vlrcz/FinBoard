@@ -1,4 +1,4 @@
-package com.vlad.finboard.tab
+package com.vlad.finboard.presentation.tab
 
 import android.os.Bundle
 import android.view.View
@@ -8,11 +8,13 @@ import com.vlad.finboard.R
 import com.vlad.finboard.databinding.FragmentIncomeBinding
 import com.vlad.finboard.navigation.navigate
 import com.vlad.finboard.navigation.screen.FragmentScreen
+import com.vlad.finboard.presentation.notes.save.SaveNoteFragment
 
 class IncomeFragment: Fragment(R.layout.fragment_income) {
 
     companion object {
         const val ADD = "add"
+        const val INCOME = "income"
     }
 
     private val binding: FragmentIncomeBinding by viewBinding(FragmentIncomeBinding::bind)
@@ -21,7 +23,7 @@ class IncomeFragment: Fragment(R.layout.fragment_income) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fab.setOnClickListener {
-            navigate(FragmentScreen(AddNoteFragment(), ADD))
+            navigate(FragmentScreen(SaveNoteFragment.newInstance(INCOME), ADD))
         }
     }
 }

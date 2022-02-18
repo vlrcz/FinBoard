@@ -10,15 +10,16 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = CategoryEntity::class,
             parentColumns = ["id"],
-            childColumns = ["category_id"]
+            childColumns = ["categoryId"]
         )
     ]
 )
 data class NoteEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
-    val category_id: Long,
-    val sum: Int
+    @PrimaryKey
+    val id: String,
+    val categoryId: Int,
+    val sum: String,
+    val date: String
 ) {
     companion object {
         const val TABLE_NAME = "notes"

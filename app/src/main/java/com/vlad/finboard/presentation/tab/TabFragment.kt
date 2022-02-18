@@ -1,4 +1,4 @@
-package com.vlad.finboard.tab
+package com.vlad.finboard.presentation.tab
 
 import android.os.Bundle
 import android.view.View

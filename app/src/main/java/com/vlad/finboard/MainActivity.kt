@@ -2,7 +2,7 @@ package com.vlad.finboard
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.vlad.finboard.tab.TabFragment
+import com.vlad.finboard.presentation.tab.TabFragment
 import com.vlad.finboard.navigation.screen.FragmentScreen
 import com.vlad.finboard.navigation.Navigator
 import com.vlad.finboard.navigation.NavigatorHolder
