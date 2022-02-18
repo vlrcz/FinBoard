@@ -4,4 +4,5 @@
     <string name="tab_income">ДОХОДЫ</string>
     <string name="sum_txt_input">Сумма</string>
     <string name="save_btn_txt">Сохранить</string>
+    <string name="fill_fields">Заполните поля</string>
 </resources>

@@ -13,8 +13,9 @@ open class Navigator(
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
 ) {
 
-    fun back() {
+    fun back(): Boolean {
         fragmentManager.popBackStack()
+        return true
     }
 
     open fun navigate(screen: NavigationScreen): Boolean {
@@ -51,5 +52,21 @@ fun Fragment.navigate(screen: NavigationScreen) {
     val activity = activity
     if (activity is NavigatorHolder) {
         activity.navigator().navigate(screen)
+    }
+}
+
+fun Fragment.back() {
+    var parent = parentFragment
+    while (parent != null) {
+        if (parent is NavigatorHolder) {
+            val isSuccess = parent.navigator().back()
+            if (isSuccess) return
+        }
+        parent = parent.parentFragment
+    }
+
+    val activity = activity
+    if (activity is NavigatorHolder) {
+        activity.navigator().back()
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,11 +36,30 @@
         app:layout_constraintTop_toBottomOf="@+id/appBar">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sumEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="number"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categoriesList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginStart="@dimen/large_margin"
+        android:layout_marginEnd="@dimen/large_margin"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toTopOf="@id/saveBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addTxtInput"
+        tools:itemCount="13"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:listitem="@layout/item_category"
+        tools:orientation="vertical"
+        tools:spanCount="4" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveBtn"
@@ -49,6 +69,7 @@
         android:text="@string/save_btn_txt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categoriesList" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
