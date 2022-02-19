@@ -16,11 +16,6 @@ class CategoryListAdapter(
 ) :
     ListAdapter<CategoryModel, CategoryListViewHolder>(CategoryDiffUtilCallback()) {
 
-    companion object {
-        private val holders = mutableListOf<CategoryListViewHolder>()
-        private val positions = mutableListOf<Int>()
-    }
-
     class CategoryListViewHolder(
         private val binding: ItemCategoryBinding,
         private val onItemClicked: (category: CategoryModel) -> Unit
@@ -32,30 +27,20 @@ class CategoryListAdapter(
                     (bindingAdapter as? CategoryListAdapter)?.getItem(bindingAdapterPosition)
                         ?: return@setOnClickListener
 
-                if (positions.size >= 1 && positions.last() != bindingAdapterPosition) {
-                    holders[positions.last()].clearBackground()
-                }
-                positions.add(bindingAdapterPosition)
-
-                if (binding.categoryImg.background == null) {
-                    binding.categoryImg.setBackgroundColor(item.color)
-                } else {
-                    clearBackground()
-                }
-
                 onItemClicked.invoke(item)
             }
         }
-
-        private fun clearBackground() {
-            binding.categoryImg.background = null
-        }
-
 
         fun bind(category: CategoryModel) {
             Glide.with(itemView.context)
                 .load(category.drawable)
                 .into(binding.categoryImg)
+
+            if (category.isSelected) {
+                binding.categoryImg.setBackgroundColor(category.color)
+            } else {
+                binding.categoryImg.background = null
+            }
         }
     }
 
@@ -67,7 +52,6 @@ class CategoryListAdapter(
 
     override fun onBindViewHolder(holder: CategoryListViewHolder, position: Int) {
         holder.bind(getItem(position))
-        holders.add(holder)
     }
 
     class CategoryDiffUtilCallback : DiffUtil.ItemCallback<CategoryModel>() {

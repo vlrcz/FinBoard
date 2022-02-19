@@ -9,15 +9,19 @@ import com.vlad.finboard.data.db.models.NotesType
 import java.util.UUID
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SaveNoteViewModel @Inject constructor(
     private val saveNoteRepository: SaveNoteRepository,
@@ -29,16 +33,30 @@ class SaveNoteViewModel @Inject constructor(
         const val COSTS = "costs"
     }
 
-    private val categoriesStateFlow = MutableStateFlow<List<CategoryModel>>(emptyList())
-    val categories: StateFlow<List<CategoryModel>>
+    private val categoriesStateFlow = MutableSharedFlow<List<CategoryModel>>(1)
+    val categories: SharedFlow<List<CategoryModel>>
         get() = categoriesStateFlow
+
+    fun isSelected(model: CategoryModel) {
+        viewModelScope.launch {
+            val list = categoriesStateFlow.first()
+            list.forEach {
+                if (it.id == model.id) {
+                    it.isSelected = !model.isSelected
+                } else {
+                    it.isSelected = false
+                }
+            }
+            categoriesStateFlow.tryEmit(list)
+        }
+    }
 
     fun fetchCategories(flag: String) {
         viewModelScope.launch {
             flow {
                 emit(saveNoteRepository.fetchCategoriesList())
             }
-                .catch { "fetch categories from db error ${it.localizedMessage}" }
+                .catch { Timber.e("fetch categories from db error ${it.localizedMessage}") }
                 .map {
                     it.map {
                         categoryMapper.mapEntityToModel(it)
@@ -57,12 +75,13 @@ class SaveNoteViewModel @Inject constructor(
                             }
                         }
                         else -> {
-                            emptyList()}
+                            emptyList()
+                        }
                     }
                 }
                 .flowOn(Dispatchers.IO)
                 .collect {
-                    categoriesStateFlow.value = it
+                    categoriesStateFlow.tryEmit(it)
                 }
         }
     }
@@ -76,6 +95,7 @@ class SaveNoteViewModel @Inject constructor(
                 .onEach {
                     saveNoteRepository.saveNote(it)
                 }
+                .catch { Timber.e("save note error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
                 .collect()
         }

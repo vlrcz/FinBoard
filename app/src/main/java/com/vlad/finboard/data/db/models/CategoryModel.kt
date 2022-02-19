@@ -10,5 +10,6 @@ data class CategoryModel(
     @ColorInt
     val color: Int,
     @DrawableRes
-    val drawable: Int
+    val drawable: Int,
+    var isSelected: Boolean = false
 )

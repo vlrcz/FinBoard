@@ -46,6 +46,7 @@ class SaveNoteFragment : Fragment(R.layout.fragment_save_note) {
     private var categoryId: Int? = null
     private val categoryListAdapter = CategoryListAdapter() {
         categoryId = it.id
+        viewModel.isSelected(it)
     }
 
     override fun onAttach(context: Context) {
@@ -55,16 +56,15 @@ class SaveNoteFragment : Fragment(R.layout.fragment_save_note) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initCategoriesList()
         saveNote()
         onEditTextFocusChanged()
     }
 
     private fun onEditTextFocusChanged() {
-        binding.sumEditText.setOnFocusChangeListener { v, hasFocus ->
+        binding.sumEditText.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus) {
-                requireActivity().hideSoftKeyboard(v)
+                requireActivity().hideSoftKeyboard(view)
             }
         }
     }
@@ -102,7 +102,7 @@ class SaveNoteFragment : Fragment(R.layout.fragment_save_note) {
 
         lifecycleScope.launchWhenCreated {
             viewModel.categories.collect {
-                categoryListAdapter.submitList(it)
+                categoryListAdapter.submitList(it) //todo
             }
         }
     }
