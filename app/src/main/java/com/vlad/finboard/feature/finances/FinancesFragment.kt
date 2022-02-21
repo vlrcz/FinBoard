@@ -9,9 +9,9 @@ import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
 
 open class FinancesFragment(layout: Int) : Fragment(layout) {
 
-    open fun openDetailFragment(fab: FloatingActionButton) {
+    open fun openDetailFragment(fab: FloatingActionButton, type: String) {
         fab.setOnClickListener {
-            navigate(FragmentScreen(FinancesDetailFragment(), ADD))
+            navigate(FragmentScreen(FinancesDetailFragment.newInstance(type), ADD))
         }
     }
 }

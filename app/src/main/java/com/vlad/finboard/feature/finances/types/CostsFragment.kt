@@ -6,6 +6,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vlad.finboard.R
 import com.vlad.finboard.databinding.FragmentCostsBinding
 import com.vlad.finboard.feature.finances.FinancesFragment
+import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
 
 class CostsFragment : FinancesFragment(R.layout.fragment_costs) {
 
@@ -13,6 +14,6 @@ class CostsFragment : FinancesFragment(R.layout.fragment_costs) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        super.openDetailFragment(binding.openFinancesDetail)
+        super.openDetailFragment(binding.openFinancesDetail, COSTS.toString())
     }
 }
