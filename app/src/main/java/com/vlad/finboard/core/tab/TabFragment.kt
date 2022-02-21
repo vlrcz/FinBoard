@@ -8,16 +8,16 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.vlad.finboard.R
-import com.vlad.finboard.core.data.db.models.NotesType.COSTS
-import com.vlad.finboard.core.data.db.models.NotesType.INCOME
+import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
+import com.vlad.finboard.feature.finances.types.FinancesType.INCOME
 import com.vlad.finboard.core.navigation.Navigator
 import com.vlad.finboard.core.navigation.NavigatorHolder
 import com.vlad.finboard.core.navigation.TabFragmentNavigator
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.core.navigation.screen.TabScreen
 import com.vlad.finboard.databinding.FragmentTabBinding
-import com.vlad.finboard.feature.finances.CostsFragment
-import com.vlad.finboard.feature.finances.IncomeFragment
+import com.vlad.finboard.feature.finances.types.CostsFragment
+import com.vlad.finboard.feature.finances.types.IncomeFragment
 
 class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
 
