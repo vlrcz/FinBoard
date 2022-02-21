@@ -13,6 +13,7 @@ import com.vlad.finboard.feature.finances.types.FinancesType.INCOME
 import com.vlad.finboard.core.navigation.Navigator
 import com.vlad.finboard.core.navigation.NavigatorHolder
 import com.vlad.finboard.core.navigation.TabFragmentNavigator
+import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.core.navigation.screen.TabScreen
 import com.vlad.finboard.databinding.FragmentTabBinding
@@ -95,7 +96,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (childFragmentManager.backStackEntryCount > 1) {
-                        navigator.back()
+                        navigator.navigate(BackScreen())
                     } else {
                         requireActivity().finish()
                     }

@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.vlad.finboard.R
+import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.core.navigation.screen.NavigationScreen
 
@@ -13,14 +14,14 @@ open class Navigator(
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
 ) {
 
-    fun back() {
-        fragmentManager.popBackStack()
-    }
-
     open fun navigate(screen: NavigationScreen): Boolean {
         return when (screen) {
             is FragmentScreen -> {
                 fragmentManager.replace(containerId, screen.fragment, screen.tag)
+                true
+            }
+            is BackScreen -> {
+                fragmentManager.popBackStack()
                 true
             }
             else -> false

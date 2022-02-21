@@ -11,6 +11,8 @@ import com.vlad.finboard.R
 import com.vlad.finboard.R.string
 import com.vlad.finboard.app.appComponent
 import com.vlad.finboard.core.data.db.models.CategoryEntity
+import com.vlad.finboard.core.navigation.navigate
+import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.finances.FinancesConstants.TAB
@@ -63,6 +65,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
                     sum = sum,
                     date = date
                 )
+                navigate(BackScreen())
             } else {
                 toast(getString(string.fill_fields))
             }
