@@ -1,4 +1,4 @@
-package com.vlad.finboard.data.db.models
+package com.vlad.finboard.core.data.db.models
 
 enum class NotesType {
     COSTS,

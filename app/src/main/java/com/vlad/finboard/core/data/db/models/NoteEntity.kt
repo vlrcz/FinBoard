@@ -1,4 +1,4 @@
-package com.vlad.finboard.data.db.models
+package com.vlad.finboard.core.data.db.models
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

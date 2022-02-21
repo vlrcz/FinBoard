@@ -1,11 +1,11 @@
-package com.vlad.finboard.navigation
+package com.vlad.finboard.core.navigation
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.vlad.finboard.R
-import com.vlad.finboard.navigation.screen.FragmentScreen
-import com.vlad.finboard.navigation.screen.NavigationScreen
+import com.vlad.finboard.core.navigation.screen.FragmentScreen
+import com.vlad.finboard.core.navigation.screen.NavigationScreen
 
 open class Navigator(
     private val activity: FragmentActivity,

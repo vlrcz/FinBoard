@@ -1,3 +1,3 @@
-package com.vlad.finboard.navigation.screen
+package com.vlad.finboard.core.navigation.screen
 
 class TabScreen(val redirect: FragmentScreen) : NavigationScreen

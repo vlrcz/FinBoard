@@ -2,9 +2,9 @@ package com.vlad.finboard.di.module
 
 import android.app.Application
 import androidx.room.Room
-import com.vlad.finboard.data.db.CategoriesDao
-import com.vlad.finboard.data.db.FinboardDatabase
-import com.vlad.finboard.data.db.NotesDao
+import com.vlad.finboard.core.data.db.CategoriesDao
+import com.vlad.finboard.core.data.db.FinboardDatabase
+import com.vlad.finboard.core.data.db.NotesDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

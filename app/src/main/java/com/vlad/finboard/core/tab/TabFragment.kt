@@ -1,4 +1,4 @@
-package com.vlad.finboard.presentation.tab
+package com.vlad.finboard.core.tab
 
 import android.os.Bundle
 import android.view.View
@@ -9,11 +9,13 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.vlad.finboard.R
 import com.vlad.finboard.databinding.FragmentTabBinding
-import com.vlad.finboard.navigation.Navigator
-import com.vlad.finboard.navigation.NavigatorHolder
-import com.vlad.finboard.navigation.TabFragmentNavigator
-import com.vlad.finboard.navigation.screen.FragmentScreen
-import com.vlad.finboard.navigation.screen.TabScreen
+import com.vlad.finboard.core.navigation.Navigator
+import com.vlad.finboard.core.navigation.NavigatorHolder
+import com.vlad.finboard.core.navigation.TabFragmentNavigator
+import com.vlad.finboard.core.navigation.screen.FragmentScreen
+import com.vlad.finboard.core.navigation.screen.TabScreen
+import com.vlad.finboard.feature.finances.CostsFragment
+import com.vlad.finboard.feature.finances.IncomeFragment
 
 class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
 
@@ -53,13 +55,15 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
                     1 -> navigator.navigate(TabScreen(FragmentScreen(IncomeFragment(), INCOME)))
                 }
             }
+
             override fun onTabUnselected(tab: Tab?) {}
             override fun onTabReselected(tab: Tab?) {}
         })
     }
 
     private fun bindOnBackPressedCallback() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (childFragmentManager.backStackEntryCount > 1) {

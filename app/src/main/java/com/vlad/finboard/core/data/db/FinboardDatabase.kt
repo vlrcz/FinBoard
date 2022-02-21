@@ -1,9 +1,9 @@
-package com.vlad.finboard.data.db
+package com.vlad.finboard.core.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.vlad.finboard.data.db.models.CategoryEntity
-import com.vlad.finboard.data.db.models.NoteEntity
+import com.vlad.finboard.core.data.db.models.CategoryEntity
+import com.vlad.finboard.core.data.db.models.NoteEntity
 
 @Database(
     entities = [
