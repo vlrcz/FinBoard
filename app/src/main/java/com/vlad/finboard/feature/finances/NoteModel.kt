@@ -14,4 +14,8 @@ data class NoteModel(
     val sum: String,
     val date: String,
     val isDate: Boolean = false
-)
+) {
+    fun sumWithRub(): String {
+        return "$sum руб."
+    }
+}

@@ -29,17 +29,29 @@ class FinancesViewModel @Inject constructor(
                 emit(financesRepository.fetchNotes())
             }
                 .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
-                .map {
-                    it.map { note ->
-                        val category = financesRepository.fetchCategory(note.categoryId)
-                        financesMapper.mapNoteEntityToModel(note, category)
-                    }
+                .map { listEntity ->
+                    listEntity
+                        .map { note ->
+                            val category = financesRepository.fetchCategory(note.categoryId)
+                            financesMapper.mapNoteEntityToModel(note, category)
+                        }
+                        .sortedByDescending {
+                            it.date
+                        }
                 }
                 .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
-                .map {
-                    it.filter { model ->
-                        model.categoryType == type
+                .map { listModel ->
+                    var date = ""
+                    val mappedList = mutableListOf<NoteModel>()
+                    listModel.forEach {
+                        if (it.date != date) {
+                            mappedList.addAll(listOf(it.copy(isDate = true), it))
+                            date = it.date
+                        } else {
+                            mappedList.add(it)
+                        }
                     }
+                    mappedList.filter { it.categoryType == type }
                 }
                 .flowOn(Dispatchers.IO)
                 .collect {

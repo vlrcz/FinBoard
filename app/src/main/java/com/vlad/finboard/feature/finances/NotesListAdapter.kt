@@ -43,7 +43,7 @@ class NotesListAdapter(
         }
 
         fun bind(note: NoteModel) {
-            binding.noteSumTxt.text = note.sum
+            binding.noteSumTxt.text = note.sumWithRub()
             binding.noteNameTxt.text = note.categoryName
             binding.noteImg.setBackgroundColor(note.categoryColor)
             Glide.with(itemView.context)
