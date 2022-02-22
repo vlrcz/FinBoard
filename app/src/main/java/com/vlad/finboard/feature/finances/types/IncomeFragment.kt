@@ -11,6 +11,6 @@ class IncomeFragment : FinancesFragment<FragmentIncomeBinding>(
 
     override fun FragmentIncomeBinding.initialize() {
         this@IncomeFragment.openFinancesDetail = binding.openFinancesDetail
-        this@IncomeFragment.notesList = binding.notesList
+        this@IncomeFragment.financesList = binding.financesList
     }
 }

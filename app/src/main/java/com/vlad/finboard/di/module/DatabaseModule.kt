@@ -29,8 +29,8 @@ class DatabaseModule {
     }
 
     @Provides
-    fun providesNotesDao(db: FinboardDatabase): FinancesDao {
-        return db.notesDao()
+    fun providesFinancesDao(db: FinboardDatabase): FinancesDao {
+        return db.financesDao()
     }
 
     @Provides

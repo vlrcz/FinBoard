@@ -11,6 +11,6 @@ class CostsFragment : FinancesFragment<FragmentCostsBinding>(
 
     override fun FragmentCostsBinding.initialize() {
         this@CostsFragment.openFinancesDetail = binding.openFinancesDetail
-        this@CostsFragment.notesList = binding.notesList
+        this@CostsFragment.financesList = binding.financesList
     }
 }

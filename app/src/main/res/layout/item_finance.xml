@@ -7,14 +7,14 @@
     android:background="@color/colorPrimaryLight">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/noteImg"
+        android:id="@+id/financeImg"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="@dimen/medium_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/noteNameTxt"
+        app:layout_constraintEnd_toStartOf="@id/financeNameTxt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/FinBoard.RoundedImageView"
@@ -22,18 +22,18 @@
         tools:src="@drawable/ic_cafe" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/noteNameTxt"
+        android:id="@+id/financeNameTxt"
         style="@style/Text.Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/noteImg"
+        app:layout_constraintStart_toEndOf="@id/financeImg"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Кафе" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/noteSumTxt"
+        android:id="@+id/financeSumTxt"
         style="@style/Text.Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

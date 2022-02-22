@@ -19,11 +19,11 @@ class FinancesViewModel @Inject constructor(
     private val financesMapper: FinancesMapper
 ) : ViewModel() {
 
-    private val notesMutableStateFlow = MutableStateFlow<List<FinanceModel>>(emptyList())
-    val notes: StateFlow<List<FinanceModel>>
-        get() = notesMutableStateFlow
+    private val financesMutableStateFlow = MutableStateFlow<List<FinanceModel>>(emptyList())
+    val finances: StateFlow<List<FinanceModel>>
+        get() = financesMutableStateFlow
 
-    fun fetchNotes(type: String) {
+    fun fetchFinances(type: String) {
         viewModelScope.launch {
             flow {
                 emit(financesRepository.fetchFinances())
@@ -35,6 +35,7 @@ class FinancesViewModel @Inject constructor(
                             val category = financesRepository.fetchCategory(finance.categoryId)
                             financesMapper.mapFinanceEntityToModel(finance, category)
                         }
+                        .filter { it.categoryType == type }
                         .sortedByDescending {
                             it.date
                         }
@@ -51,11 +52,11 @@ class FinancesViewModel @Inject constructor(
                             mappedList.add(it)
                         }
                     }
-                    mappedList.filter { it.categoryType == type }
+                    mappedList
                 }
                 .flowOn(Dispatchers.IO)
                 .collect {
-                    notesMutableStateFlow.value = it
+                    financesMutableStateFlow.value = it
                 }
         }
     }

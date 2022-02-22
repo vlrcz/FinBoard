@@ -13,7 +13,7 @@ import com.vlad.finboard.core.data.db.models.FinanceEntity
 )
 abstract class FinboardDatabase : RoomDatabase() {
 
-    abstract fun notesDao(): FinancesDao
+    abstract fun financesDao(): FinancesDao
     abstract fun categoriesDao(): CategoriesDao
 
     companion object {

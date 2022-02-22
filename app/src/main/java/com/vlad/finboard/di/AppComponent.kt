@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @Component(modules = [DatabaseModule::class])
 interface AppComponent {
 
-    fun notesDao(): FinancesDao
+    fun financesDao(): FinancesDao
     fun categoriesDao(): CategoriesDao
     fun finboardDatabase(): FinboardDatabase
     fun inject(app: App)

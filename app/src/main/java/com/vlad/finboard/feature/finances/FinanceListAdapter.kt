@@ -7,28 +7,28 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.vlad.finboard.databinding.ItemDateBinding
-import com.vlad.finboard.databinding.ItemNoteBinding
+import com.vlad.finboard.databinding.ItemFinanceBinding
 
 class FinanceListAdapter(
     private val onItemClicked: (finance: FinanceModel) -> Unit
 ) :
-    ListAdapter<FinanceModel, ViewHolder>(NotesDiffUtilCallback()) {
+    ListAdapter<FinanceModel, ViewHolder>(FinancesDiffUtilCallback()) {
 
     companion object {
         const val VIEW_TYPE_DATE = 1
-        const val VIEW_TYPE_NOTE = 2
+        const val VIEW_TYPE_FINANCE = 2
     }
 
     override fun getItemViewType(position: Int): Int {
         return if (getItem(position).isDate) {
             VIEW_TYPE_DATE
         } else {
-            VIEW_TYPE_NOTE
+            VIEW_TYPE_FINANCE
         }
     }
 
-    class NotesListViewHolder(
-        private val binding: ItemNoteBinding,
+    class FinancesListViewHolder(
+        private val binding: ItemFinanceBinding,
         private val onItemClicked: (finance: FinanceModel) -> Unit
     ) : ViewHolder(binding.root) {
 
@@ -43,12 +43,12 @@ class FinanceListAdapter(
         }
 
         fun bind(finance: FinanceModel) {
-            binding.noteSumTxt.text = finance.sumWithRub()
-            binding.noteNameTxt.text = finance.categoryName
-            binding.noteImg.setBackgroundColor(finance.categoryColor)
+            binding.financeSumTxt.text = finance.sumWithRub()
+            binding.financeNameTxt.text = finance.categoryName
+            binding.financeImg.setBackgroundColor(finance.categoryColor)
             Glide.with(itemView.context)
                 .load(finance.categoryDrawable)
-                .into(binding.noteImg)
+                .into(binding.financeImg)
         }
     }
 
@@ -57,16 +57,16 @@ class FinanceListAdapter(
     ) : ViewHolder(binding.root) {
 
         fun bind(finance: FinanceModel) {
-            binding.dateNoteTxt.text = finance.date
+            binding.dateFinanceTxt.text = finance.date
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
-            VIEW_TYPE_NOTE -> {
+            VIEW_TYPE_FINANCE -> {
                 val binding =
-                    ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                NotesListViewHolder(binding, onItemClicked)
+                    ItemFinanceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                FinancesListViewHolder(binding, onItemClicked)
             }
             else -> {
                 val binding =
@@ -78,7 +78,7 @@ class FinanceListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (holder) {
-            is NotesListViewHolder -> {
+            is FinancesListViewHolder -> {
                 holder.bind(getItem(position))
             }
             is DateViewHolder -> {
@@ -87,7 +87,7 @@ class FinanceListAdapter(
         }
     }
 
-    class NotesDiffUtilCallback : DiffUtil.ItemCallback<FinanceModel>() {
+    class FinancesDiffUtilCallback : DiffUtil.ItemCallback<FinanceModel>() {
         override fun areItemsTheSame(oldItem: FinanceModel, newItem: FinanceModel): Boolean {
             return oldItem.id == newItem.id
         }
