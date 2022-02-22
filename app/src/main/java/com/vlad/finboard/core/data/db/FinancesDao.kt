@@ -10,8 +10,8 @@ import com.vlad.finboard.core.data.db.models.FinanceEntity
 interface FinancesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNote(finance: FinanceEntity)
+    suspend fun insertFinance(finance: FinanceEntity)
 
     @Query("SELECT * FROM ${FinanceEntity.TABLE_NAME}")
-    suspend fun fetchNotes(): List<FinanceEntity>
+    suspend fun fetchFinances(): List<FinanceEntity>
 }

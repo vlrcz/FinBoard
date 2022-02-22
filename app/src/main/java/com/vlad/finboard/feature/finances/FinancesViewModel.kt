@@ -26,7 +26,7 @@ class FinancesViewModel @Inject constructor(
     fun fetchNotes(type: String) {
         viewModelScope.launch {
             flow {
-                emit(financesRepository.fetchNotes())
+                emit(financesRepository.fetchFinances())
             }
                 .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
                 .map { listEntity ->

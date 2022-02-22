@@ -26,7 +26,7 @@ class FinancesDetailViewModel @Inject constructor(
                 emit(FinanceEntity(uniqueId, categoryId, sum, date))
             }
                 .onEach {
-                    financesRepository.saveNote(it)
+                    financesRepository.saveFinance(it)
                 }
                 .catch {
                     Timber.d ("save note error ${it.localizedMessage}")

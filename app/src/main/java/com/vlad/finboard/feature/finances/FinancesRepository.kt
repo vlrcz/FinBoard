@@ -11,12 +11,12 @@ class FinancesRepository @Inject constructor(
     private val categoriesDao: CategoriesDao
 ) {
 
-    suspend fun saveNote(finance: FinanceEntity) {
-        financesDao.insertNote(finance)
+    suspend fun saveFinance(finance: FinanceEntity) {
+        financesDao.insertFinance(finance)
     }
 
-    suspend fun fetchNotes(): List<FinanceEntity> {
-        return financesDao.fetchNotes()
+    suspend fun fetchFinances(): List<FinanceEntity> {
+        return financesDao.fetchFinances()
     }
 
     suspend fun fetchCategory(id: Int): CategoryEntity {
