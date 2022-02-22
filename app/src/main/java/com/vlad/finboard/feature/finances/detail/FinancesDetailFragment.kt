@@ -59,19 +59,16 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
             categoryId = model.categoryId
             financeDate = model.date
             binding.sumEditText.setText(model.sum)
-            //todo выделить категорию
         }
     }
 
     private fun bindSaveButton() {
         binding.saveBtn.setOnClickListener {
-            //basic category id
-            categoryId = 1
+            categoryId = 1 //todo убрать после добавления адаптера
             val catId = categoryId
             financeDate = millisToDate(System.currentTimeMillis())
             val date = financeDate
             val sum = binding.sumEditText.text?.toString()
-            //basic add finance
             if (catId != null && sum != null && date != null) {
                 viewModel.saveFinance(
                     categoryId = catId,
