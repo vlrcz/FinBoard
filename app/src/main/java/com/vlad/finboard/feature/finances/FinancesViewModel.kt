@@ -31,9 +31,9 @@ class FinancesViewModel @Inject constructor(
                 .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
                 .map { listEntity ->
                     listEntity
-                        .map { note ->
-                            val category = financesRepository.fetchCategory(note.categoryId)
-                            financesMapper.mapNoteEntityToModel(note, category)
+                        .map { finance ->
+                            val category = financesRepository.fetchCategory(finance.categoryId)
+                            financesMapper.mapFinanceEntityToModel(finance, category)
                         }
                         .sortedByDescending {
                             it.date

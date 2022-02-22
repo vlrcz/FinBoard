@@ -13,19 +13,19 @@ class FinancesMapper @Inject constructor(
     private val context: Context
 ) {
 
-    fun mapNoteEntityToModel(entity: FinanceEntity, category: CategoryEntity): FinanceModel {
+    fun mapFinanceEntityToModel(finance: FinanceEntity, category: CategoryEntity): FinanceModel {
         val categoryDrawable =
             context.resources.getIdentifier(category.res, "drawable", context.packageName)
         val categoryColor = Color.parseColor(category.color)
         val categoryName = CategoryName.valueOf(category.name)
         return FinanceModel(
-            id = entity.id,
+            id = finance.id,
             categoryName = categoryName.toString(),
             categoryColor = categoryColor,
             categoryDrawable = categoryDrawable,
             categoryType = category.type,
-            sum = entity.sum,
-            date = entity.date
+            sum = finance.sum,
+            date = finance.date
         )
     }
 }
