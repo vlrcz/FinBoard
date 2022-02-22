@@ -33,7 +33,7 @@ open class FinancesFragment<T : ViewBinding>(
     var notesList: RecyclerView? = null
 
     private val financeListAdapter = FinanceListAdapter() {
-
+        navigate(FragmentScreen(FinancesDetailFragment.newInstance(it), ADD))
     }
 
     @Inject
@@ -75,7 +75,7 @@ open class FinancesFragment<T : ViewBinding>(
 
     private fun openDetailFragment() {
         openFinancesDetail?.setOnClickListener {
-            navigate(FragmentScreen(FinancesDetailFragment.newInstance(type), ADD))
+            navigate(FragmentScreen(FinancesDetailFragment.newInstance(null), ADD))
         }
     }
 

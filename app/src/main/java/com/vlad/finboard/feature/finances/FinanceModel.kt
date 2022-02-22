@@ -1,10 +1,14 @@
 package com.vlad.finboard.feature.finances
 
+import android.os.Parcelable
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class FinanceModel(
     val id: String,
+    val categoryId: Int,
     val categoryName: String,
     @ColorInt
     val categoryColor: Int,
@@ -14,7 +18,7 @@ data class FinanceModel(
     val sum: String,
     val date: String,
     val isDate: Boolean = false
-) {
+) : Parcelable {
     fun sumWithRub(): String {
         return "$sum руб."
     }

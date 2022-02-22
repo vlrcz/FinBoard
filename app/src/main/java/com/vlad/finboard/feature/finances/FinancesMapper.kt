@@ -20,6 +20,7 @@ class FinancesMapper @Inject constructor(
         val categoryName = CategoryName.valueOf(category.name)
         return FinanceModel(
             id = finance.id,
+            categoryId = category.id,
             categoryName = categoryName.toString(),
             categoryColor = categoryColor,
             categoryDrawable = categoryDrawable,

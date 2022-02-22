@@ -19,7 +19,7 @@ class FinancesDetailViewModel @Inject constructor(
     private val financesRepository: FinancesRepository
 ) : ViewModel() {
 
-    fun saveNote(categoryId: Int, sum: String, date: String) {
+    fun saveFinance(categoryId: Int, sum: String, date: String) {
         viewModelScope.launch {
             val uniqueId = UUID.randomUUID().toString()
             flow {

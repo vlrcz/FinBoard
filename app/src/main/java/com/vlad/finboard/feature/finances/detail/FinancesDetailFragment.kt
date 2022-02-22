@@ -10,12 +10,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vlad.finboard.R
 import com.vlad.finboard.R.string
 import com.vlad.finboard.app.appComponent
-import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
-import com.vlad.finboard.feature.finances.FinancesConstants.TAB
+import com.vlad.finboard.feature.finances.FinanceModel
+import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
 import com.vlad.finboard.hideSoftKeyboard
 import com.vlad.finboard.toast
 import java.text.SimpleDateFormat
@@ -26,9 +26,9 @@ import javax.inject.Provider
 class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
     companion object {
-        fun newInstance(type: String): FinancesDetailFragment {
+        fun newInstance(finance: FinanceModel?): FinancesDetailFragment {
             return FinancesDetailFragment().apply {
-                arguments = bundleOf(TAB to type)
+                arguments = bundleOf(DETAIL to finance)
             }
         }
     }
@@ -38,6 +38,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
     private val viewModel: FinancesDetailViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
     private val binding: FragmentFinancesDetailBinding by viewBinding(FragmentFinancesDetailBinding::bind)
     private var categoryId: Int? = null
+    private var financeDate: String? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,6 +50,17 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
         bindSaveButton()
         onEditTextFocusChanged()
+        restoreFinanceDetailState()
+    }
+
+    private fun restoreFinanceDetailState() {
+        val model = requireArguments().getParcelable(DETAIL) as? FinanceModel
+        if (model != null) {
+            categoryId = model.categoryId
+            financeDate = model.date
+            binding.sumEditText.setText(model.sum)
+            //todo выделить категорию
+        }
     }
 
     private fun bindSaveButton() {
@@ -56,11 +68,12 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
             //basic category id
             categoryId = 1
             val catId = categoryId
+            financeDate = millisToDate(System.currentTimeMillis())
+            val date = financeDate
             val sum = binding.sumEditText.text?.toString()
-            val date = millisToDate(System.currentTimeMillis())
-            //basic add note
-            if (catId != null && sum != null) {
-                viewModel.saveNote(
+            //basic add finance
+            if (catId != null && sum != null && date != null) {
+                viewModel.saveFinance(
                     categoryId = catId,
                     sum = sum,
                     date = date
