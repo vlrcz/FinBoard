@@ -14,4 +14,7 @@ interface CategoriesDao {
 
     @Query("SELECT * FROM ${CategoryEntity.TABLE_NAME}")
     suspend fun fetchCategories(): List<CategoryEntity>
+
+    @Query("SELECT * FROM ${CategoryEntity.TABLE_NAME} WHERE id = :id")
+    suspend fun fetchCategoryById(id: Int): CategoryEntity
 }

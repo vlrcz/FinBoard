@@ -2,11 +2,14 @@ package com.vlad.finboard.di
 
 import android.app.Application
 import android.content.Context
+import androidx.viewbinding.ViewBinding
 import com.vlad.finboard.app.App
 import com.vlad.finboard.core.data.db.CategoriesDao
 import com.vlad.finboard.core.data.db.FinboardDatabase
 import com.vlad.finboard.core.data.db.NotesDao
 import com.vlad.finboard.di.module.DatabaseModule
+import com.vlad.finboard.feature.finances.FinancesFragment
+import com.vlad.finboard.feature.finances.FinancesMapper
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -21,6 +24,8 @@ interface AppComponent {
     fun finboardDatabase(): FinboardDatabase
     fun inject(app: App)
     fun inject(financesDetailFragment: FinancesDetailFragment)
+    fun inject(financesFragment: FinancesFragment<ViewBinding>)
+    fun financesMapper(): FinancesMapper
 
     @Component.Factory
     interface Factory {
