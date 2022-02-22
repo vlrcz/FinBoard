@@ -32,7 +32,7 @@ open class FinancesFragment<T : ViewBinding>(
     var openFinancesDetail: FloatingActionButton? = null
     var notesList: RecyclerView? = null
 
-    private val notesListAdapter = NotesListAdapter() {
+    private val financeListAdapter = FinanceListAdapter() {
 
     }
 
@@ -68,7 +68,7 @@ open class FinancesFragment<T : ViewBinding>(
         viewModel.fetchNotes(type)
         lifecycleScope.launchWhenStarted {
             viewModel.notes.collect {
-                notesListAdapter.submitList(it)
+                financeListAdapter.submitList(it)
             }
         }
     }
@@ -81,7 +81,7 @@ open class FinancesFragment<T : ViewBinding>(
 
     private fun initList() {
         with(notesList) {
-            this?.adapter = notesListAdapter
+            this?.adapter = financeListAdapter
             this?.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }

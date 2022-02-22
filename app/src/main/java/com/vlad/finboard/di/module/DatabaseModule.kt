@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.vlad.finboard.core.data.db.CategoriesDao
 import com.vlad.finboard.core.data.db.FinboardDatabase
-import com.vlad.finboard.core.data.db.NotesDao
+import com.vlad.finboard.core.data.db.FinancesDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -29,7 +29,7 @@ class DatabaseModule {
     }
 
     @Provides
-    fun providesNotesDao(db: FinboardDatabase): NotesDao {
+    fun providesNotesDao(db: FinboardDatabase): FinancesDao {
         return db.notesDao()
     }
 

@@ -6,7 +6,7 @@ import androidx.viewbinding.ViewBinding
 import com.vlad.finboard.app.App
 import com.vlad.finboard.core.data.db.CategoriesDao
 import com.vlad.finboard.core.data.db.FinboardDatabase
-import com.vlad.finboard.core.data.db.NotesDao
+import com.vlad.finboard.core.data.db.FinancesDao
 import com.vlad.finboard.di.module.DatabaseModule
 import com.vlad.finboard.feature.finances.FinancesFragment
 import com.vlad.finboard.feature.finances.FinancesMapper
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @Component(modules = [DatabaseModule::class])
 interface AppComponent {
 
-    fun notesDao(): NotesDao
+    fun notesDao(): FinancesDao
     fun categoriesDao(): CategoriesDao
     fun finboardDatabase(): FinboardDatabase
     fun inject(app: App)

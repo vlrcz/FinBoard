@@ -2,7 +2,7 @@ package com.vlad.finboard.feature.finances.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vlad.finboard.core.data.db.models.NoteEntity
+import com.vlad.finboard.core.data.db.models.FinanceEntity
 import com.vlad.finboard.feature.finances.FinancesRepository
 import java.util.UUID
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class FinancesDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val uniqueId = UUID.randomUUID().toString()
             flow {
-                emit(NoteEntity(uniqueId, categoryId, sum, date))
+                emit(FinanceEntity(uniqueId, categoryId, sum, date))
             }
                 .onEach {
                     financesRepository.saveNote(it)

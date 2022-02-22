@@ -9,10 +9,10 @@ import com.bumptech.glide.Glide
 import com.vlad.finboard.databinding.ItemDateBinding
 import com.vlad.finboard.databinding.ItemNoteBinding
 
-class NotesListAdapter(
-    private val onItemClicked: (note: NoteModel) -> Unit
+class FinanceListAdapter(
+    private val onItemClicked: (finance: FinanceModel) -> Unit
 ) :
-    ListAdapter<NoteModel, ViewHolder>(NotesDiffUtilCallback()) {
+    ListAdapter<FinanceModel, ViewHolder>(NotesDiffUtilCallback()) {
 
     companion object {
         const val VIEW_TYPE_DATE = 1
@@ -29,25 +29,25 @@ class NotesListAdapter(
 
     class NotesListViewHolder(
         private val binding: ItemNoteBinding,
-        private val onItemClicked: (note: NoteModel) -> Unit
+        private val onItemClicked: (finance: FinanceModel) -> Unit
     ) : ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
                 val item =
-                    (bindingAdapter as? NotesListAdapter)?.getItem(bindingAdapterPosition)
+                    (bindingAdapter as? FinanceListAdapter)?.getItem(bindingAdapterPosition)
                         ?: return@setOnClickListener
 
                 onItemClicked.invoke(item)
             }
         }
 
-        fun bind(note: NoteModel) {
-            binding.noteSumTxt.text = note.sumWithRub()
-            binding.noteNameTxt.text = note.categoryName
-            binding.noteImg.setBackgroundColor(note.categoryColor)
+        fun bind(finance: FinanceModel) {
+            binding.noteSumTxt.text = finance.sumWithRub()
+            binding.noteNameTxt.text = finance.categoryName
+            binding.noteImg.setBackgroundColor(finance.categoryColor)
             Glide.with(itemView.context)
-                .load(note.categoryDrawable)
+                .load(finance.categoryDrawable)
                 .into(binding.noteImg)
         }
     }
@@ -56,8 +56,8 @@ class NotesListAdapter(
         private val binding: ItemDateBinding
     ) : ViewHolder(binding.root) {
 
-        fun bind(note: NoteModel) {
-            binding.dateNoteTxt.text = note.date
+        fun bind(finance: FinanceModel) {
+            binding.dateNoteTxt.text = finance.date
         }
     }
 
@@ -87,12 +87,12 @@ class NotesListAdapter(
         }
     }
 
-    class NotesDiffUtilCallback : DiffUtil.ItemCallback<NoteModel>() {
-        override fun areItemsTheSame(oldItem: NoteModel, newItem: NoteModel): Boolean {
+    class NotesDiffUtilCallback : DiffUtil.ItemCallback<FinanceModel>() {
+        override fun areItemsTheSame(oldItem: FinanceModel, newItem: FinanceModel): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: NoteModel, newItem: NoteModel): Boolean {
+        override fun areContentsTheSame(oldItem: FinanceModel, newItem: FinanceModel): Boolean {
             return oldItem == newItem
         }
     }

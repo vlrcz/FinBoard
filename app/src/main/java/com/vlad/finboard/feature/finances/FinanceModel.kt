@@ -3,7 +3,7 @@ package com.vlad.finboard.feature.finances
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 
-data class NoteModel(
+data class FinanceModel(
     val id: String,
     val categoryName: String,
     @ColorInt

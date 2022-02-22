@@ -3,17 +3,17 @@ package com.vlad.finboard.core.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.vlad.finboard.core.data.db.models.CategoryEntity
-import com.vlad.finboard.core.data.db.models.NoteEntity
+import com.vlad.finboard.core.data.db.models.FinanceEntity
 
 @Database(
     entities = [
-        NoteEntity::class,
+        FinanceEntity::class,
         CategoryEntity::class
     ], version = FinboardDatabase.DB_VERSION
 )
 abstract class FinboardDatabase : RoomDatabase() {
 
-    abstract fun notesDao(): NotesDao
+    abstract fun notesDao(): FinancesDao
     abstract fun categoriesDao(): CategoriesDao
 
     companion object {

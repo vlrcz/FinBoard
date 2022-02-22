@@ -1,22 +1,22 @@
 package com.vlad.finboard.feature.finances
 
 import com.vlad.finboard.core.data.db.CategoriesDao
-import com.vlad.finboard.core.data.db.NotesDao
+import com.vlad.finboard.core.data.db.FinancesDao
 import com.vlad.finboard.core.data.db.models.CategoryEntity
-import com.vlad.finboard.core.data.db.models.NoteEntity
+import com.vlad.finboard.core.data.db.models.FinanceEntity
 import javax.inject.Inject
 
 class FinancesRepository @Inject constructor(
-    private val notesDao: NotesDao,
+    private val financesDao: FinancesDao,
     private val categoriesDao: CategoriesDao
 ) {
 
-    suspend fun saveNote(note: NoteEntity) {
-        notesDao.insertNote(note)
+    suspend fun saveNote(finance: FinanceEntity) {
+        financesDao.insertNote(finance)
     }
 
-    suspend fun fetchNotes(): List<NoteEntity> {
-        return notesDao.fetchNotes()
+    suspend fun fetchNotes(): List<FinanceEntity> {
+        return financesDao.fetchNotes()
     }
 
     suspend fun fetchCategory(id: Int): CategoryEntity {

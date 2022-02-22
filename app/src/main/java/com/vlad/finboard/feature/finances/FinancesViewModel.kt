@@ -19,8 +19,8 @@ class FinancesViewModel @Inject constructor(
     private val financesMapper: FinancesMapper
 ) : ViewModel() {
 
-    private val notesMutableStateFlow = MutableStateFlow<List<NoteModel>>(emptyList())
-    val notes: StateFlow<List<NoteModel>>
+    private val notesMutableStateFlow = MutableStateFlow<List<FinanceModel>>(emptyList())
+    val notes: StateFlow<List<FinanceModel>>
         get() = notesMutableStateFlow
 
     fun fetchNotes(type: String) {
@@ -42,7 +42,7 @@ class FinancesViewModel @Inject constructor(
                 .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
                 .map { listModel ->
                     var date = ""
-                    val mappedList = mutableListOf<NoteModel>()
+                    val mappedList = mutableListOf<FinanceModel>()
                     listModel.forEach {
                         if (it.date != date) {
                             mappedList.addAll(listOf(it.copy(isDate = true), it))
