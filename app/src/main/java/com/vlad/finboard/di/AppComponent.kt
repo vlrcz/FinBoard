@@ -24,7 +24,7 @@ interface AppComponent {
     fun finboardDatabase(): FinboardDatabase
     fun inject(app: App)
     fun inject(financesDetailFragment: FinancesDetailFragment)
-    fun inject(financesFragment: FinancesFragment<ViewBinding>)
+    fun inject(financesFragment: FinancesFragment)
     fun financesMapper(): FinancesMapper
 
     @Component.Factory

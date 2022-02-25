@@ -11,8 +11,7 @@ import com.vlad.finboard.databinding.ItemFinanceBinding
 
 class FinanceListAdapter(
     private val onItemClicked: (finance: FinanceModel) -> Unit
-) :
-    ListAdapter<FinanceModel, ViewHolder>(FinancesDiffUtilCallback()) {
+) : ListAdapter<FinanceModel, ViewHolder>(FinancesDiffUtilCallback()) {
 
     companion object {
         const val VIEW_TYPE_DATE = 1

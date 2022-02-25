@@ -10,8 +10,7 @@ class TabFragmentNavigator(
     fragment: Fragment,
     tabConfig: TabConfig,
     private val tabSelectedListener: (Int) -> Unit
-) :
-    Navigator(fragment.requireActivity(), R.id.tabContainer, fragment.childFragmentManager) {
+) : Navigator(fragment.requireActivity(), R.id.tabContainer, fragment.childFragmentManager) {
 
     private var currentPosition: Int? = null
     private val config = tabConfig.config

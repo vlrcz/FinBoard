@@ -15,7 +15,6 @@ import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.finances.FinanceModel
-import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
 import com.vlad.finboard.hideSoftKeyboard
 import com.vlad.finboard.toast
 import java.text.SimpleDateFormat
@@ -26,6 +25,7 @@ import javax.inject.Provider
 class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
     companion object {
+        private const val DETAIL = "detail"
         fun newInstance(finance: FinanceModel?): FinancesDetailFragment {
             return FinancesDetailFragment().apply {
                 arguments = bundleOf(DETAIL to finance)

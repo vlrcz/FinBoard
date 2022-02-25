@@ -2,69 +2,60 @@ package com.vlad.finboard.feature.finances
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.vlad.finboard.R
 import com.vlad.finboard.app.appComponent
+import com.vlad.finboard.core.navigation.NavigationConstants.ADD
 import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
+import com.vlad.finboard.databinding.FragmentFinancesBinding
 import com.vlad.finboard.di.ViewModelFactory
-import com.vlad.finboard.feature.finances.FinancesConstants.ADD
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.coroutines.flow.collect
 
-open class FinancesFragment<T : ViewBinding>(
-    private val inflateMethod: (LayoutInflater, ViewGroup?, Boolean) -> T,
-    private val type: String
-) : Fragment() {
+class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
-    private var _binding: T? = null
-    val binding: T get() = _binding!!
-    var openFinancesDetail: FloatingActionButton? = null
-    var financesList: RecyclerView? = null
-
-    private val financeListAdapter = FinanceListAdapter() {
-        navigate(FragmentScreen(FinancesDetailFragment.newInstance(it), ADD))
+    companion object {
+        private const val TYPE = "type"
+        fun newInstance(type: String): FinancesFragment {
+            return FinancesFragment().apply {
+                arguments = bundleOf(TYPE to type)
+            }
+        }
     }
 
     @Inject
     lateinit var viewModelProvider: Provider<FinancesViewModel>
     private val viewModel: FinancesViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
+    private val binding: FragmentFinancesBinding by viewBinding(FragmentFinancesBinding::bind)
+    private val financeListAdapter = FinanceListAdapter() {
+        navigate(FragmentScreen(FinancesDetailFragment.newInstance(it), ADD))
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        context.appComponent.inject(this as FinancesFragment<ViewBinding>)
-    }
-
-    open fun T.initialize() {}
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = inflateMethod.invoke(inflater, container, false)
-        binding.initialize()
-        return binding.root
+        context.appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindViewModel()
-        openDetailFragment()
+        val type = requireArguments().getString(TYPE)
+        if (type != null) {
+            bindViewModel(type)
+        }
+        bindOpenFinancesDetailBtn()
         initList()
     }
 
-    private fun bindViewModel() {
+    private fun bindViewModel(type: String) {
         viewModel.fetchFinances(type)
         lifecycleScope.launchWhenStarted {
             viewModel.finances.collect {
@@ -73,16 +64,16 @@ open class FinancesFragment<T : ViewBinding>(
         }
     }
 
-    private fun openDetailFragment() {
-        openFinancesDetail?.setOnClickListener {
-            navigate(FragmentScreen(FinancesDetailFragment.newInstance(null), ADD))
+    private fun bindOpenFinancesDetailBtn() {
+        binding.openFinancesDetail.setOnClickListener {
+            navigate(FragmentScreen(FinancesDetailFragment(), ADD))
         }
     }
 
     private fun initList() {
-        with(financesList) {
-            this?.adapter = financeListAdapter
-            this?.layoutManager =
+        with(binding.financesList) {
+            adapter = financeListAdapter
+            layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
     }

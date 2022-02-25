@@ -8,8 +8,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.vlad.finboard.R
-import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
-import com.vlad.finboard.feature.finances.types.FinancesType.INCOME
 import com.vlad.finboard.core.navigation.Navigator
 import com.vlad.finboard.core.navigation.NavigatorHolder
 import com.vlad.finboard.core.navigation.TabFragmentNavigator
@@ -17,13 +15,15 @@ import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.core.navigation.screen.TabScreen
 import com.vlad.finboard.databinding.FragmentTabBinding
-import com.vlad.finboard.feature.finances.types.CostsFragment
-import com.vlad.finboard.feature.finances.types.IncomeFragment
+import com.vlad.finboard.feature.finances.FinancesFragment
+import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
+import com.vlad.finboard.feature.finances.types.FinancesType.INCOME
 
 class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
 
     private val binding: FragmentTabBinding by viewBinding(FragmentTabBinding::bind)
     lateinit var navigator: TabFragmentNavigator
+    private val tabConfig = TabConfig(mapOf(COSTS.name to 0, INCOME.name to 1))
 
     override fun navigator(): Navigator {
         return navigator
@@ -32,22 +32,14 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        navigator = TabFragmentNavigator(
-            this,
-            TabConfig(
-                mapOf(
-                    COSTS.name to 0,
-                    INCOME.name to 1
-                )
-            )
-        ) {
+        navigator = TabFragmentNavigator(this, tabConfig) {
             if (view == null) return@TabFragmentNavigator
 
             val tabLayout = binding.tabLayout
             tabLayout.selectTab(tabLayout.getTabAt(it))
         }
         if (savedInstanceState == null) {
-            navigator.navigate(TabScreen(FragmentScreen(CostsFragment(), COSTS.name)))
+            navigateTab(FragmentScreen(FinancesFragment.newInstance(COSTS.name), COSTS.name))
         }
     }
 
@@ -62,26 +54,16 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
         }
     }
 
+    private fun navigateTab(screen: FragmentScreen) {
+        navigator.navigate(TabScreen(screen))
+    }
+
     private fun bindTabLayout() {
         binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab?) {
                 when (tab?.position) {
-                    0 -> navigator.navigate(
-                        TabScreen(
-                            FragmentScreen(
-                                CostsFragment(),
-                                COSTS.name
-                            )
-                        )
-                    )
-                    1 -> navigator.navigate(
-                        TabScreen(
-                            FragmentScreen(
-                                IncomeFragment(),
-                                INCOME.name
-                            )
-                        )
-                    )
+                    0 -> navigateTab(FragmentScreen(FinancesFragment.newInstance(COSTS.name), COSTS.name))
+                    1 -> navigateTab(FragmentScreen(FinancesFragment.newInstance(INCOME.name), INCOME.name))
                 }
             }
 
