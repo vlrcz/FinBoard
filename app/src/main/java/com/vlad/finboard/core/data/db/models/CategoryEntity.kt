@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = CategoryEntity.TABLE_NAME
+    tableName = "categories"
 )
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
@@ -13,8 +13,4 @@ data class CategoryEntity(
     val type: String,
     val color: String,
     val res: String
-) {
-    companion object {
-        const val TABLE_NAME = "categories"
-    }
-}
+)

@@ -12,9 +12,9 @@ interface CategoriesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCategory(category: CategoryEntity)
 
-    @Query("SELECT * FROM ${CategoryEntity.TABLE_NAME}")
+    @Query("SELECT * FROM categories")
     suspend fun fetchCategories(): List<CategoryEntity>
 
-    @Query("SELECT * FROM ${CategoryEntity.TABLE_NAME} WHERE id = :id")
+    @Query("SELECT * FROM categories WHERE id = :id")
     suspend fun fetchCategoryById(id: Int): CategoryEntity
 }

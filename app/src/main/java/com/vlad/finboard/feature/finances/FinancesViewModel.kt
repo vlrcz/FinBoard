@@ -17,8 +17,7 @@ import timber.log.Timber
 
 class FinancesViewModel @Inject constructor(
     private val financesRepository: FinancesRepository,
-    private val financesMapper: FinancesMapper,
-    private val categoriesRepository: CategoriesRepository
+    private val financesMapper: FinancesMapper
 ) : ViewModel() {
 
     private val financesMutableStateFlow = MutableStateFlow<List<FinanceModel>>(emptyList())
@@ -28,21 +27,14 @@ class FinancesViewModel @Inject constructor(
     fun fetchFinances(type: String) {
         viewModelScope.launch {
             flow {
-                emit(financesRepository.fetchFinances())
+                emit(financesRepository.fetchFinances(type))
             }
                 .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
                 .map { listEntity ->
-                    listEntity
-                        .map { finance ->
-                            val category = categoriesRepository.fetchCategory(finance.categoryId)
-                            financesMapper.mapFinanceEntityToModel(finance, category)
-                        }
-                        .filter { it.categoryType == type }
-                        .sortedByDescending {
-                            it.createAt
-                        }
+                    listEntity.map { financesMapper.mapFinanceEntityToModel(it.key, it.value) }
                 }
                 .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
+                .flowOn(Dispatchers.IO)
                 .map { listModel ->
                     var date = 0L
                     val mappedList = mutableListOf<FinanceModel>()
@@ -56,7 +48,7 @@ class FinancesViewModel @Inject constructor(
                     }
                     mappedList
                 }
-                .flowOn(Dispatchers.IO)
+                .flowOn(Dispatchers.Default)
                 .collect {
                     financesMutableStateFlow.value = it
                 }

@@ -40,7 +40,7 @@ class App : Application() {
     }
 
     private fun initDb() {
-        database.query("select * from ${CategoryEntity.TABLE_NAME}", null)
+        database.query("select * from categories", null)
     }//todo удалить
 }
 

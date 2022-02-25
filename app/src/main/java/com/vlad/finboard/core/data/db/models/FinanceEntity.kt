@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = FinanceEntity.TABLE_NAME,
+    tableName = "finances",
     foreignKeys = [
         ForeignKey(
             entity = CategoryEntity::class,
@@ -21,8 +21,4 @@ data class FinanceEntity(
     val sum: Double,
     val createAt: Long,
     val updateAt: Long
-) {
-    companion object {
-        const val TABLE_NAME = "notes"
-    }
-}
+)
