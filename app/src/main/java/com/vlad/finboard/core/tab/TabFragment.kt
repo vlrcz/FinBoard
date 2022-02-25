@@ -36,8 +36,8 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
             this,
             TabConfig(
                 mapOf(
-                    COSTS.toString() to 0,
-                    INCOME.toString() to 1
+                    COSTS.name to 0,
+                    INCOME.name to 1
                 )
             )
         ) {
@@ -47,7 +47,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
             tabLayout.selectTab(tabLayout.getTabAt(it))
         }
         if (savedInstanceState == null) {
-            navigator.navigate(TabScreen(FragmentScreen(CostsFragment(), COSTS.toString())))
+            navigator.navigate(TabScreen(FragmentScreen(CostsFragment(), COSTS.name)))
         }
     }
 
@@ -70,7 +70,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
                         TabScreen(
                             FragmentScreen(
                                 CostsFragment(),
-                                COSTS.toString()
+                                COSTS.name
                             )
                         )
                     )
@@ -78,7 +78,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
                         TabScreen(
                             FragmentScreen(
                                 IncomeFragment(),
-                                INCOME.toString()
+                                INCOME.name
                             )
                         )
                     )

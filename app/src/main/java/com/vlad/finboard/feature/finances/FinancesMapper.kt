@@ -3,7 +3,6 @@ package com.vlad.finboard.feature.finances
 import android.content.Context
 import android.graphics.Color
 import com.vlad.finboard.core.data.db.models.CategoryEntity
-import com.vlad.finboard.core.data.db.models.CategoryName
 import com.vlad.finboard.core.data.db.models.FinanceEntity
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,11 +16,18 @@ class FinancesMapper @Inject constructor(
         val categoryDrawable =
             context.resources.getIdentifier(category.res, "drawable", context.packageName)
         val categoryColor = Color.parseColor(category.color)
-        val categoryName = CategoryName.valueOf(category.name)
+        val categoryName =
+            context.getString(
+                context.resources.getIdentifier(
+                    category.name,
+                    "string",
+                    context.packageName
+                )
+            )
         return FinanceModel(
             id = finance.id,
             categoryId = category.id,
-            categoryName = categoryName.toString(),
+            categoryName = categoryName,
             categoryColor = categoryColor,
             categoryDrawable = categoryDrawable,
             categoryType = category.type,

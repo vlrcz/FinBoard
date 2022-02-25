@@ -6,7 +6,7 @@ import com.vlad.finboard.feature.finances.types.FinancesType.INCOME
 
 class IncomeFragment : FinancesFragment<FragmentIncomeBinding>(
     FragmentIncomeBinding::inflate,
-    INCOME.toString()
+    INCOME.name
 ) {
 
     override fun FragmentIncomeBinding.initialize() {

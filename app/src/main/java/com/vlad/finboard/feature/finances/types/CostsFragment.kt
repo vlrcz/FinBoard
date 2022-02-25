@@ -6,7 +6,7 @@ import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
 
 class CostsFragment : FinancesFragment<FragmentCostsBinding>(
     FragmentCostsBinding::inflate,
-    COSTS.toString()
+    COSTS.name
 ) {
 
     override fun FragmentCostsBinding.initialize() {

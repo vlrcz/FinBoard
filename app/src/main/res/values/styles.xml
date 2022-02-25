@@ -12,7 +12,7 @@
     </style>
 
     <style name="FinBoard.TabLayout" parent="Widget.Material3.TabLayout">
-        <item name="tabTextAppearance">@style/Text.Body</item>
+        <item name="tabTextAppearance">@style/Text.Body.Tab</item>
         <item name="tabTextColor">@color/white</item>
         <item name="android:background">@color/colorPrimaryLight</item>
         <item name="tabSelectedTextColor">@color/white</item>
