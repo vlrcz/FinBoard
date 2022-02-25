@@ -7,8 +7,7 @@ import com.vlad.finboard.core.data.db.models.FinanceEntity
 import javax.inject.Inject
 
 class FinancesRepository @Inject constructor(
-    private val financesDao: FinancesDao,
-    private val categoriesDao: CategoriesDao
+    private val financesDao: FinancesDao
 ) {
 
     suspend fun saveFinance(finance: FinanceEntity) {
@@ -17,9 +16,5 @@ class FinancesRepository @Inject constructor(
 
     suspend fun fetchFinances(): List<FinanceEntity> {
         return financesDao.fetchFinances()
-    }
-
-    suspend fun fetchCategory(id: Int): CategoryEntity {
-        return categoriesDao.fetchCategoryById(id)
     }
 }

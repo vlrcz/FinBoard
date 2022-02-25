@@ -2,6 +2,7 @@ package com.vlad.finboard.feature.finances
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vlad.finboard.feature.finances.categories.CategoriesRepository
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import timber.log.Timber
 
 class FinancesViewModel @Inject constructor(
     private val financesRepository: FinancesRepository,
-    private val financesMapper: FinancesMapper
+    private val financesMapper: FinancesMapper,
+    private val categoriesRepository: CategoriesRepository
 ) : ViewModel() {
 
     private val financesMutableStateFlow = MutableStateFlow<List<FinanceModel>>(emptyList())
@@ -32,22 +34,22 @@ class FinancesViewModel @Inject constructor(
                 .map { listEntity ->
                     listEntity
                         .map { finance ->
-                            val category = financesRepository.fetchCategory(finance.categoryId)
+                            val category = categoriesRepository.fetchCategory(finance.categoryId)
                             financesMapper.mapFinanceEntityToModel(finance, category)
                         }
                         .filter { it.categoryType == type }
                         .sortedByDescending {
-                            it.date
+                            it.createAt
                         }
                 }
                 .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
                 .map { listModel ->
-                    var date = ""
+                    var date = 0L
                     val mappedList = mutableListOf<FinanceModel>()
                     listModel.forEach {
-                        if (it.date != date) {
+                        if (it.createAt != date) {
                             mappedList.addAll(listOf(it.copy(isDate = true), it))
-                            date = it.date
+                            date = it.createAt
                         } else {
                             mappedList.add(it)
                         }

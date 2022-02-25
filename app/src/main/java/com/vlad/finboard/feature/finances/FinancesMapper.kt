@@ -5,9 +5,7 @@ import android.graphics.Color
 import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.core.data.db.models.FinanceEntity
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class FinancesMapper @Inject constructor(
     private val context: Context
 ) {
@@ -16,14 +14,9 @@ class FinancesMapper @Inject constructor(
         val categoryDrawable =
             context.resources.getIdentifier(category.res, "drawable", context.packageName)
         val categoryColor = Color.parseColor(category.color)
-        val categoryName =
-            context.getString(
-                context.resources.getIdentifier(
-                    category.name,
-                    "string",
-                    context.packageName
-                )
-            )
+        val categoryName = context.getString(
+            context.resources.getIdentifier(category.name, "string", context.packageName)
+        )
         return FinanceModel(
             id = finance.id,
             categoryId = category.id,
@@ -32,7 +25,8 @@ class FinancesMapper @Inject constructor(
             categoryDrawable = categoryDrawable,
             categoryType = category.type,
             sum = finance.sum,
-            date = finance.date
+            createAt = finance.createAt,
+            updateAt = finance.updateAt
         )
     }
 }

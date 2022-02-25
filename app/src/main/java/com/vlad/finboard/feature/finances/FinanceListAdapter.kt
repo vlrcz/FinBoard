@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.vlad.finboard.databinding.ItemDateBinding
 import com.vlad.finboard.databinding.ItemFinanceBinding
+import com.vlad.finboard.millisToDate
 
 class FinanceListAdapter(
     private val onItemClicked: (finance: FinanceModel) -> Unit
@@ -56,7 +57,7 @@ class FinanceListAdapter(
     ) : ViewHolder(binding.root) {
 
         fun bind(finance: FinanceModel) {
-            binding.dateFinanceTxt.text = finance.date
+            binding.dateFinanceTxt.text = finance.createAt.millisToDate()
         }
     }
 

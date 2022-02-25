@@ -25,7 +25,6 @@ interface AppComponent {
     fun inject(app: App)
     fun inject(financesDetailFragment: FinancesDetailFragment)
     fun inject(financesFragment: FinancesFragment)
-    fun financesMapper(): FinancesMapper
 
     @Component.Factory
     interface Factory {

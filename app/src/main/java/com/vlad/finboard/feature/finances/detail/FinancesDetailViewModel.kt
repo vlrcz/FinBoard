@@ -19,17 +19,23 @@ class FinancesDetailViewModel @Inject constructor(
     private val financesRepository: FinancesRepository
 ) : ViewModel() {
 
-    fun saveFinance(categoryId: Int, sum: String, date: String) {
+    fun saveFinance(
+        financeId: String?,
+        categoryId: Int,
+        sum: Double,
+        createAt: Long,
+        updateAt: Long
+    ) {
         viewModelScope.launch {
-            val uniqueId = UUID.randomUUID().toString()
+            val uniqueId = financeId ?: UUID.randomUUID().toString()
             flow {
-                emit(FinanceEntity(uniqueId, categoryId, sum, date))
+                emit(FinanceEntity(uniqueId, categoryId, sum, createAt, updateAt))
             }
                 .onEach {
                     financesRepository.saveFinance(it)
                 }
                 .catch {
-                    Timber.d ("save note error ${it.localizedMessage}")
+                    Timber.d("save finance error ${it.localizedMessage}")
                 }
                 .flowOn(Dispatchers.IO)
                 .collect()

@@ -18,8 +18,9 @@ data class FinanceEntity(
     @PrimaryKey
     val id: String,
     val categoryId: Int,
-    val sum: String,
-    val date: String
+    val sum: Double,
+    val createAt: Long,
+    val updateAt: Long
 ) {
     companion object {
         const val TABLE_NAME = "notes"

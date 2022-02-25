@@ -16,8 +16,9 @@ data class FinanceModel(
     @DrawableRes
     val categoryDrawable: Int,
     val categoryType: String,
-    val sum: String,
-    val date: String,
+    val sum: Double,
+    val createAt: Long,
+    val updateAt: Long,
     val isDate: Boolean = false
 ) : Parcelable {
     fun sumWithRub(): String {

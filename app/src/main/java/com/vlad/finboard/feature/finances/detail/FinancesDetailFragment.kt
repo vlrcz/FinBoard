@@ -17,8 +17,6 @@ import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.finances.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
 import com.vlad.finboard.toast
-import java.text.SimpleDateFormat
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -37,8 +35,9 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
     lateinit var viewModelProvider: Provider<FinancesDetailViewModel>
     private val viewModel: FinancesDetailViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
     private val binding: FragmentFinancesDetailBinding by viewBinding(FragmentFinancesDetailBinding::bind)
-    private var categoryId: Int? = null
-    private var financeDate: String? = null
+    private var _categoryId: Int? = null
+    private var _createAt: Long? = null
+    private var _financeId: String? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -50,30 +49,33 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
         bindSaveButton()
         onEditTextFocusChanged()
-        restoreFinanceDetailState()
+        fillViewFromArguments()
     }
 
-    private fun restoreFinanceDetailState() {
-        val model = requireArguments().getParcelable(DETAIL) as? FinanceModel
-        if (model != null) {
-            categoryId = model.categoryId
-            financeDate = model.date
-            binding.sumEditText.setText(model.sum)
-        }
+    private fun fillViewFromArguments() {
+        if (arguments == null) return
+        val model = requireArguments().getParcelable(DETAIL) as? FinanceModel ?: return
+        _categoryId = model.categoryId
+        _createAt = model.createAt
+        _financeId = model.id
+        binding.sumEditText.setText(model.sum.toString())
     }
 
     private fun bindSaveButton() {
         binding.saveBtn.setOnClickListener {
-            categoryId = 1 //todo убрать после добавления адаптера
-            val catId = categoryId
-            financeDate = millisToDate(System.currentTimeMillis())
-            val date = financeDate
-            val sum = binding.sumEditText.text?.toString()
-            if (catId != null && sum != null && date != null) {
+            _categoryId = 1 //todo убрать после добавления адаптера
+            val categoryId = _categoryId
+            val createAt = _createAt ?: System.currentTimeMillis()
+            val updateAt = System.currentTimeMillis()
+            val financeId = _financeId
+            val sum = binding.sumEditText.text?.toString()?.toDouble()
+            if (categoryId != null && sum != null) {
                 viewModel.saveFinance(
-                    categoryId = catId,
+                    financeId = financeId,
+                    categoryId = categoryId,
                     sum = sum,
-                    date = date
+                    createAt = createAt,
+                    updateAt = updateAt
                 )
                 navigate(BackScreen())
             } else {
@@ -88,10 +90,5 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
                 requireActivity().hideSoftKeyboard(v)
             }
         }
-    }
-
-    private fun millisToDate(millis: Long): String {
-        val targetFormat = SimpleDateFormat("dd.MM.yyyy", Locale.ROOT)
-        return targetFormat.format(millis)
     }
 }
