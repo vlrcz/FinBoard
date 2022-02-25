@@ -1,29 +1,31 @@
-package com.vlad.finboard.feature.finances
+package com.vlad.finboard.feature.finances.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.vlad.finboard.R
 import com.vlad.finboard.databinding.ItemDateBinding
 import com.vlad.finboard.databinding.ItemFinanceBinding
-import com.vlad.finboard.millisToDate
+import com.vlad.finboard.feature.finances.model.DateModel
+import com.vlad.finboard.feature.finances.model.FinanceModel
+import com.vlad.finboard.feature.finances.model.FinanceWithDate
 
 class FinanceListAdapter(
     private val onItemClicked: (finance: FinanceModel) -> Unit
-) : ListAdapter<FinanceModel, ViewHolder>(FinancesDiffUtilCallback()) {
+) : ListAdapter<FinanceWithDate, ViewHolder>(FinancesDiffUtilCallback()) {
 
     companion object {
-        const val VIEW_TYPE_DATE = 1
-        const val VIEW_TYPE_FINANCE = 2
+        const val VIEW_TYPE_DATE = R.layout.item_date
+        const val VIEW_TYPE_FINANCE = R.layout.item_finance
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position).isDate) {
-            VIEW_TYPE_DATE
-        } else {
+        return if (getItem(position) is FinanceModel) {
             VIEW_TYPE_FINANCE
+        } else {
+            VIEW_TYPE_DATE
         }
     }
 
@@ -38,7 +40,7 @@ class FinanceListAdapter(
                     (bindingAdapter as? FinanceListAdapter)?.getItem(bindingAdapterPosition)
                         ?: return@setOnClickListener
 
-                onItemClicked.invoke(item)
+                onItemClicked.invoke(item as FinanceModel)
             }
         }
 
@@ -49,15 +51,6 @@ class FinanceListAdapter(
             Glide.with(itemView.context)
                 .load(finance.categoryDrawable)
                 .into(binding.financeImg)
-        }
-    }
-
-    class DateViewHolder(
-        private val binding: ItemDateBinding
-    ) : ViewHolder(binding.root) {
-
-        fun bind(finance: FinanceModel) {
-            binding.dateFinanceTxt.text = finance.createAt.millisToDate()
         }
     }
 
@@ -79,21 +72,11 @@ class FinanceListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (holder) {
             is FinancesListViewHolder -> {
-                holder.bind(getItem(position))
+                holder.bind(getItem(position) as FinanceModel)
             }
             is DateViewHolder -> {
-                holder.bind(getItem(position))
+                holder.bind(getItem(position) as DateModel)
             }
-        }
-    }
-
-    class FinancesDiffUtilCallback : DiffUtil.ItemCallback<FinanceModel>() {
-        override fun areItemsTheSame(oldItem: FinanceModel, newItem: FinanceModel): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: FinanceModel, newItem: FinanceModel): Boolean {
-            return oldItem == newItem
         }
     }
 }

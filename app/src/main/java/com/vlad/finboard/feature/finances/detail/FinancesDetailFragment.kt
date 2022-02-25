@@ -14,7 +14,7 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
-import com.vlad.finboard.feature.finances.FinanceModel
+import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
 import com.vlad.finboard.toast
 import javax.inject.Inject
@@ -56,7 +56,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         if (arguments == null) return
         val model = requireArguments().getParcelable(DETAIL) as? FinanceModel ?: return
         _categoryId = model.categoryId
-        _createAt = model.createAt
+        _createAt = model.createAt.dateMillis
         _financeId = model.id
         binding.sumEditText.setText(model.sum.toString())
     }

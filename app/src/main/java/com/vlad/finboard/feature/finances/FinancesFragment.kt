@@ -16,6 +16,7 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.databinding.FragmentFinancesBinding
 import com.vlad.finboard.di.ViewModelFactory
+import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
 import javax.inject.Inject
 import javax.inject.Provider
