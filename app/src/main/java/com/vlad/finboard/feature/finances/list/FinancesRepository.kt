@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances
+package com.vlad.finboard.feature.finances.list
 
 import com.vlad.finboard.core.data.db.FinancesDao
 import com.vlad.finboard.core.data.db.models.CategoryEntity

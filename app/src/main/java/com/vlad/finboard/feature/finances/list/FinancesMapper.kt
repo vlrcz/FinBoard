@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances
+package com.vlad.finboard.feature.finances.list
 
 import android.content.Context
 import android.graphics.Color

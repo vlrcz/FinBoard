@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances
+package com.vlad.finboard.feature.finances.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

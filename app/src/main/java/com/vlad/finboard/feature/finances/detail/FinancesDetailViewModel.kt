@@ -3,7 +3,7 @@ package com.vlad.finboard.feature.finances.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vlad.finboard.core.data.db.models.FinanceEntity
-import com.vlad.finboard.feature.finances.FinancesRepository
+import com.vlad.finboard.feature.finances.list.FinancesRepository
 import java.util.UUID
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers

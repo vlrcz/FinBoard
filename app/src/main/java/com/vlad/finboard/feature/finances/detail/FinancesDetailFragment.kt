@@ -14,6 +14,8 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
+import com.vlad.finboard.feature.finances.detail.di.DaggerFinancesDetailComponent
+import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
 import com.vlad.finboard.toast
@@ -41,7 +43,10 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        context.appComponent.inject(this)
+        DaggerFinancesDetailComponent
+            .factory()
+            .create(context.appComponent)
+            .inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

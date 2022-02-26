@@ -15,7 +15,7 @@ import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.core.navigation.screen.TabScreen
 import com.vlad.finboard.databinding.FragmentTabBinding
-import com.vlad.finboard.feature.finances.FinancesFragment
+import com.vlad.finboard.feature.finances.list.FinancesFragment
 import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
 import com.vlad.finboard.feature.finances.types.FinancesType.INCOME
 

@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances
+package com.vlad.finboard.feature.finances.list
 
 import android.content.Context
 import android.os.Bundle
@@ -18,6 +18,7 @@ import com.vlad.finboard.databinding.FragmentFinancesBinding
 import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
+import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.coroutines.flow.collect
@@ -43,7 +44,10 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        context.appComponent.inject(this)
+        DaggerFinancesListComponent
+            .factory()
+            .create(context.appComponent)
+            .inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
