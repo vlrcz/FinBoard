@@ -26,8 +26,4 @@
         <item name="android:textSize">@dimen/text_caption</item>
     </style>
 
-    <style name="Text.Body.Tab">
-        <item name="textAllCaps">true</item>
-    </style>
-
 </resources>
