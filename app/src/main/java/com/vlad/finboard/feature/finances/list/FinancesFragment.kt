@@ -16,6 +16,7 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.databinding.FragmentFinancesBinding
 import com.vlad.finboard.di.ViewModelFactory
+import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
 import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
@@ -26,7 +27,6 @@ import kotlinx.coroutines.flow.collect
 class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
     companion object {
-        private const val TYPE = "type"
         fun newInstance(type: String): FinancesFragment {
             return FinancesFragment().apply {
                 arguments = bundleOf(TYPE to type)

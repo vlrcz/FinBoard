@@ -3,6 +3,7 @@ package com.vlad.finboard.feature.finances.list
 import com.vlad.finboard.core.data.db.FinancesDao
 import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.core.data.db.models.FinanceEntity
+import com.vlad.finboard.core.data.db.models.FinanceWithCategoryEntity
 import javax.inject.Inject
 
 class FinancesRepository @Inject constructor(
@@ -13,7 +14,7 @@ class FinancesRepository @Inject constructor(
         financesDao.insertFinance(finance)
     }
 
-    suspend fun fetchFinances(type: String): Map<FinanceEntity, CategoryEntity> {
-        return financesDao.fetchFinances(type)
+    suspend fun fetchFinancesWithCategoryByType(type: String): List<FinanceWithCategoryEntity> {
+        return financesDao.fetchFinancesWithCategoryByType(type)
     }
 }

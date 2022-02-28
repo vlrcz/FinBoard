@@ -3,11 +3,11 @@ package com.vlad.finboard.feature.finances.adapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import com.vlad.finboard.feature.finances.model.DateModel
 import com.vlad.finboard.feature.finances.model.FinanceModel
-import com.vlad.finboard.feature.finances.model.FinanceWithDate
+import com.vlad.finboard.feature.finances.model.Item
 
-class FinancesDiffUtilCallback : ItemCallback<FinanceWithDate>() {
+class FinancesDiffUtilCallback : ItemCallback<Item>() {
 
-    override fun areItemsTheSame(oldItem: FinanceWithDate, newItem: FinanceWithDate): Boolean {
+    override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
         return when {
             oldItem is DateModel && newItem is DateModel -> {
                 oldItem == newItem
@@ -21,7 +21,7 @@ class FinancesDiffUtilCallback : ItemCallback<FinanceWithDate>() {
         }
     }
 
-    override fun areContentsTheSame(oldItem: FinanceWithDate, newItem: FinanceWithDate): Boolean {
+    override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
         return when {
             oldItem is DateModel && newItem is DateModel -> {
                 oldItem.dateMillis == newItem.dateMillis

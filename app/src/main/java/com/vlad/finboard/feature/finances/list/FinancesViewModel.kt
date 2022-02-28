@@ -2,7 +2,7 @@ package com.vlad.finboard.feature.finances.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vlad.finboard.feature.finances.model.FinanceWithDate
+import com.vlad.finboard.feature.finances.model.Item
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,18 +20,21 @@ class FinancesViewModel @Inject constructor(
     private val financesMapper: FinancesMapper
 ) : ViewModel() {
 
-    private val financesMutableStateFlow = MutableStateFlow<List<FinanceWithDate>>(emptyList())
-    val finances: StateFlow<List<FinanceWithDate>>
+    private val financesMutableStateFlow = MutableStateFlow<List<Item>>(emptyList())
+    val finances: StateFlow<List<Item>>
         get() = financesMutableStateFlow
 
     fun fetchFinances(type: String) {
         viewModelScope.launch {
-            flow {
-                emit(financesRepository.fetchFinances(type))
-            }
+            flow { emit(financesRepository.fetchFinancesWithCategoryByType(type)) }
                 .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
                 .map { listEntity ->
-                    listEntity.map { financesMapper.mapFinanceEntityToModel(it.key, it.value) }
+                    listEntity.map {
+                        financesMapper.mapFinanceEntityToModel(
+                            it.financeEntity,
+                            it.categoryEntity
+                        )
+                    }
                 }
                 .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
@@ -43,9 +46,7 @@ class FinancesViewModel @Inject constructor(
                         }
                 }
                 .flowOn(Dispatchers.Default)
-                .collect {
-                    financesMutableStateFlow.value = it
-                }
+                .collect { financesMutableStateFlow.value = it }
         }
     }
 }

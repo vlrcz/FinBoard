@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class DateModel(
     val dateString: String,
     val dateMillis: Long
-) : FinanceWithDate, Parcelable {
+) : Item, Parcelable {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

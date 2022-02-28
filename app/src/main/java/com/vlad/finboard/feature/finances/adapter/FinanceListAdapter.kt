@@ -10,11 +10,11 @@ import com.vlad.finboard.databinding.ItemDateBinding
 import com.vlad.finboard.databinding.ItemFinanceBinding
 import com.vlad.finboard.feature.finances.model.DateModel
 import com.vlad.finboard.feature.finances.model.FinanceModel
-import com.vlad.finboard.feature.finances.model.FinanceWithDate
+import com.vlad.finboard.feature.finances.model.Item
 
 class FinanceListAdapter(
     private val onItemClicked: (finance: FinanceModel) -> Unit
-) : ListAdapter<FinanceWithDate, ViewHolder>(FinancesDiffUtilCallback()) {
+) : ListAdapter<Item, ViewHolder>(FinancesDiffUtilCallback()) {
 
     companion object {
         const val VIEW_TYPE_DATE = R.layout.item_date

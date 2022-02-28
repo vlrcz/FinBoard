@@ -18,7 +18,7 @@ data class FinanceModel(
     val sum: Double,
     val createAt: DateModel,
     val updateAt: DateModel
-) : Parcelable, FinanceWithDate {
+) : Parcelable, Item {
 
     fun sumWithRub(): String {
         return "$sum руб."

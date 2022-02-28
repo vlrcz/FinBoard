@@ -8,14 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vlad.finboard.R
-import com.vlad.finboard.R.string
 import com.vlad.finboard.app.appComponent
 import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
+import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
 import com.vlad.finboard.feature.finances.detail.di.DaggerFinancesDetailComponent
-import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
 import com.vlad.finboard.toast
@@ -25,7 +24,6 @@ import javax.inject.Provider
 class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
     companion object {
-        private const val DETAIL = "detail"
         fun newInstance(finance: FinanceModel?): FinancesDetailFragment {
             return FinancesDetailFragment().apply {
                 arguments = bundleOf(DETAIL to finance)
@@ -84,7 +82,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
                 )
                 navigate(BackScreen())
             } else {
-                toast(getString(string.fill_fields))
+                toast(getString(R.string.fill_fields))
             }
         }
     }
