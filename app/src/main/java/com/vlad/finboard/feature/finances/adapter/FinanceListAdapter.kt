@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
 import com.vlad.finboard.R
 import com.vlad.finboard.databinding.ItemDateBinding
 import com.vlad.finboard.databinding.ItemFinanceBinding
@@ -16,55 +15,24 @@ class FinanceListAdapter(
     private val onItemClicked: (finance: FinanceModel) -> Unit
 ) : ListAdapter<Item, ViewHolder>(FinancesDiffUtilCallback()) {
 
-    companion object {
-        const val VIEW_TYPE_DATE = R.layout.item_date
-        const val VIEW_TYPE_FINANCE = R.layout.item_finance
-    }
-
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position) is FinanceModel) {
-            VIEW_TYPE_FINANCE
-        } else {
-            VIEW_TYPE_DATE
-        }
-    }
-
-    class FinancesListViewHolder(
-        private val binding: ItemFinanceBinding,
-        private val onItemClicked: (finance: FinanceModel) -> Unit
-    ) : ViewHolder(binding.root) {
-
-        init {
-            binding.root.setOnClickListener {
-                val item =
-                    (bindingAdapter as? FinanceListAdapter)?.getItem(bindingAdapterPosition)
-                        ?: return@setOnClickListener
-
-                onItemClicked.invoke(item as FinanceModel)
-            }
-        }
-
-        fun bind(finance: FinanceModel) {
-            binding.financeSumTxt.text = finance.sumWithRub()
-            binding.financeNameTxt.text = finance.categoryName
-            binding.financeImg.setBackgroundColor(finance.categoryColor)
-            Glide.with(itemView.context)
-                .load(finance.categoryDrawable)
-                .into(binding.financeImg)
-        }
+        return getItem(position).getItemViewType()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
-            VIEW_TYPE_FINANCE -> {
+            R.layout.item_finance -> {
                 val binding =
                     ItemFinanceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 FinancesListViewHolder(binding, onItemClicked)
             }
-            else -> {
+            R.layout.item_date -> {
                 val binding =
                     ItemDateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 DateViewHolder(binding)
+            }
+            else -> {
+                throw IllegalArgumentException("Adapter item viewType not found")
             }
         }
     }

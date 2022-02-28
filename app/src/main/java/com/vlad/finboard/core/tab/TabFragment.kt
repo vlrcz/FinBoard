@@ -8,6 +8,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.vlad.finboard.R
+import com.vlad.finboard.core.navigation.NavigationConstants
 import com.vlad.finboard.core.navigation.Navigator
 import com.vlad.finboard.core.navigation.NavigatorHolder
 import com.vlad.finboard.core.navigation.TabFragmentNavigator
@@ -23,7 +24,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
 
     private val binding: FragmentTabBinding by viewBinding(FragmentTabBinding::bind)
     lateinit var navigator: TabFragmentNavigator
-    private val tabConfig = TabConfig(mapOf(COSTS.name to 0, INCOME.name to 1))
+    private val tabConfig = TabConfig(mapOf(NavigationConstants.COSTS to 0, NavigationConstants.INCOME to 1))
 
     override fun navigator(): Navigator {
         return navigator
@@ -39,7 +40,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
             tabLayout.selectTab(tabLayout.getTabAt(it))
         }
         if (savedInstanceState == null) {
-            navigateTab(FragmentScreen(FinancesFragment.newInstance(COSTS.name), COSTS.name))
+            navigateTab(FragmentScreen(FinancesFragment.newInstance(COSTS.name), NavigationConstants.COSTS))
         }
     }
 
@@ -62,8 +63,8 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
         binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab?) {
                 when (tab?.position) {
-                    0 -> navigateTab(FragmentScreen(FinancesFragment.newInstance(COSTS.name), COSTS.name))
-                    1 -> navigateTab(FragmentScreen(FinancesFragment.newInstance(INCOME.name), INCOME.name))
+                    0 -> navigateTab(FragmentScreen(FinancesFragment.newInstance(COSTS.name), NavigationConstants.COSTS))
+                    1 -> navigateTab(FragmentScreen(FinancesFragment.newInstance(INCOME.name), NavigationConstants.INCOME))
                 }
             }
 
