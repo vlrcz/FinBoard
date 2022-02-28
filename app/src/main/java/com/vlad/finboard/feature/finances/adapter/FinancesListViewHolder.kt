@@ -21,7 +21,7 @@ class FinancesListViewHolder(
     }
 
     fun bind(finance: FinanceModel) {
-        binding.financeSumTxt.text = finance.sumWithRub()
+        binding.financeSumTxt.text = finance.sum
         binding.financeNameTxt.text = finance.categoryName
         binding.financeImg.setBackgroundColor(finance.categoryColor)
         Glide.with(itemView.context)

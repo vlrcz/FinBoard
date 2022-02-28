@@ -16,14 +16,10 @@ data class FinanceModel(
     @DrawableRes
     val categoryDrawable: Int,
     val categoryType: String,
-    val sum: Double,
+    val sum: String,
     val createAt: DateModel,
     val updateAt: DateModel
 ) : Parcelable, Item {
-
-    fun sumWithRub(): String {
-        return "$sum руб."
-    }
 
     override fun getItemViewType(): Int {
         return R.layout.item_finance

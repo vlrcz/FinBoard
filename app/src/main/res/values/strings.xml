@@ -18,4 +18,5 @@
     <string name="deposits">Вклады</string>
     <string name="grants">Степендия</string>
     <string name="pension">Пенсия</string>
+    <string name="currency">руб.</string>
 </resources>

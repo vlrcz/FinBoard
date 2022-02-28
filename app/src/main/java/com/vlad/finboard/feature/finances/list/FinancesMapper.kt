@@ -2,6 +2,7 @@ package com.vlad.finboard.feature.finances.list
 
 import android.content.Context
 import android.graphics.Color
+import com.vlad.finboard.R
 import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.core.data.db.models.FinanceEntity
 import com.vlad.finboard.feature.finances.model.DateModel
@@ -20,6 +21,7 @@ class FinancesMapper @Inject constructor(
         val categoryName = context.getString(
             context.resources.getIdentifier(category.name, "string", context.packageName)
         )
+        val financeSum = finance.sum.toString() + " " + context.getString(R.string.currency)
         val createAt = DateModel(finance.createAt.millisToDate(), finance.createAt)
         val updateAt = DateModel(finance.updateAt.millisToDate(), finance.updateAt)
         return FinanceModel(
@@ -29,7 +31,7 @@ class FinancesMapper @Inject constructor(
             categoryColor = categoryColor,
             categoryDrawable = categoryDrawable,
             categoryType = category.type,
-            sum = finance.sum,
+            sum = financeSum,
             createAt = createAt,
             updateAt = updateAt
         )
