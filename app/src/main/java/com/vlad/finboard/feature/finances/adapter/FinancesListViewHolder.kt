@@ -1,14 +1,17 @@
 package com.vlad.finboard.feature.finances.adapter
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.vlad.finboard.databinding.ItemFinanceBinding
 import com.vlad.finboard.feature.finances.model.FinanceModel
 
 class FinancesListViewHolder(
-    private val binding: ItemFinanceBinding,
+    view: View,
     private val onItemClicked: (finance: FinanceModel) -> Unit
-) : ViewHolder(binding.root) {
+) : ViewHolder(view) {
+
+    private val binding: ItemFinanceBinding = ItemFinanceBinding.bind(view)
 
     init {
         binding.root.setOnClickListener {
@@ -21,7 +24,7 @@ class FinancesListViewHolder(
     }
 
     fun bind(finance: FinanceModel) {
-        binding.financeSumTxt.text = finance.sum
+        binding.financeSumTxt.text = finance.sum.sumWithCurrency
         binding.financeNameTxt.text = finance.categoryName
         binding.financeImg.setBackgroundColor(finance.categoryColor)
         Glide.with(itemView.context)

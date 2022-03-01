@@ -61,12 +61,12 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         _categoryId = model.categoryId
         _createAt = model.createAt.dateMillis
         _financeId = model.id
-        binding.sumEditText.setText(model.sum.toString())
+        binding.sumEditText.setText(model.sum.sumDouble.toString())
     }
 
     private fun bindSaveButton() {
         binding.saveBtn.setOnClickListener {
-            _categoryId = 1 //todo убрать после добавления адаптера
+            _categoryId = 1//todo убрать после добавления адаптера
             val categoryId = _categoryId
             val createAt = _createAt ?: System.currentTimeMillis()
             val updateAt = System.currentTimeMillis()

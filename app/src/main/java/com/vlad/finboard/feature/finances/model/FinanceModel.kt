@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import com.vlad.finboard.R
+import java.util.Currency
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -16,9 +17,8 @@ data class FinanceModel(
     @DrawableRes
     val categoryDrawable: Int,
     val categoryType: String,
-    val sum: String,
-    val createAt: DateModel,
-    val updateAt: DateModel
+    val sum: SumModel,
+    val createAt: DateModel
 ) : Parcelable, Item {
 
     override fun getItemViewType(): Int {

@@ -22,14 +22,14 @@ class FinanceListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             R.layout.item_finance -> {
-                val binding =
-                    ItemFinanceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                FinancesListViewHolder(binding, onItemClicked)
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_finance, parent, false)
+                FinancesListViewHolder(view, onItemClicked)
             }
             R.layout.item_date -> {
-                val binding =
-                    ItemDateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                DateViewHolder(binding)
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_date, parent, false)
+                DateViewHolder(view)
             }
             else -> {
                 throw IllegalArgumentException("Adapter item viewType not found")

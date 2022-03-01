@@ -1,7 +1,6 @@
 package com.vlad.finboard.feature.finances.list
 
 import com.vlad.finboard.core.data.db.FinancesDao
-import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.core.data.db.models.FinanceEntity
 import com.vlad.finboard.core.data.db.models.FinanceWithCategoryEntity
 import javax.inject.Inject

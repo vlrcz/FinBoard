@@ -4,8 +4,8 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class FinanceWithCategoryEntity(
-    @Relation(parentColumn = "id", entityColumn = "categoryId", entity = FinanceEntity::class)
-    val financeEntity: FinanceEntity,
     @Embedded
+    val financeEntity: FinanceEntity,
+    @Relation(parentColumn = "categoryId", entityColumn = "id")
     val categoryEntity: CategoryEntity
 )

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -28,23 +29,9 @@ class FinancesViewModel @Inject constructor(
         viewModelScope.launch {
             flow { emit(financesRepository.fetchFinancesWithCategoryByType(type)) }
                 .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
-                .map { listEntity ->
-                    listEntity.map {
-                        financesMapper.mapFinanceEntityToModel(
-                            it.financeEntity,
-                            it.categoryEntity
-                        )
-                    }
-                }
-                .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
-                .map { listModel ->
-                    listModel
-                        .groupBy { it.createAt }
-                        .flatMap {
-                            listOf(it.key) + it.value
-                        }
-                }
+                .map { financesMapper.mapEntities(it) }
+                .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.Default)
                 .collect { financesMutableStateFlow.value = it }
         }
