@@ -51,7 +51,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         super.onViewCreated(view, savedInstanceState)
 
         bindSaveButton()
-        onEditTextFocusChanged()
+        setEditTextFocusChangeListener()
         fillViewFromArguments()
     }
 
@@ -87,7 +87,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         }
     }
 
-    private fun onEditTextFocusChanged() {
+    private fun setEditTextFocusChangeListener() {
         binding.sumEditText.setOnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 requireActivity().hideSoftKeyboard(v)
