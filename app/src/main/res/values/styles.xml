@@ -12,15 +12,24 @@
     </style>
 
     <style name="FinBoard.TabLayout" parent="Widget.Material3.TabLayout">
-        <item name="tabTextAppearance">@style/Text.Body</item>
+        <item name="tabTextAppearance">@style/FinBoard.TabText</item>
         <item name="tabTextColor">@color/white</item>
         <item name="android:background">@color/colorPrimaryLight</item>
         <item name="tabSelectedTextColor">@color/white</item>
     </style>
 
+    <style name="FinBoard.TabText" parent="Text.Body">
+        <item name="textAllCaps">true</item>
+    </style>
+
     <style name="FinBoard.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="titleTextAppearance">@style/Text.Head</item>
         <item name="titleTextColor">@color/white</item>
+    </style>
+
+    <style name="FinBoard.RoundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
     </style>
 
 </resources>

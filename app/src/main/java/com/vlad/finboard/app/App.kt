@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.os.StrictMode
 import androidx.viewbinding.BuildConfig
-import com.vlad.finboard.data.db.FinboardDatabase
-import com.vlad.finboard.data.db.models.CategoryEntity
+import com.vlad.finboard.core.data.db.FinboardDatabase
+import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.di.AppComponent
 import com.vlad.finboard.di.DaggerAppComponent
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class App : Application() {
     }
 
     private fun initDb() {
-        database.query("select * from ${CategoryEntity.TABLE_NAME}", null)
+        database.query("select * from categories", null)
     }//todo удалить
 }
 

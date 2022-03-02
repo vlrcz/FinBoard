@@ -3,10 +3,12 @@ package com.vlad.finboard.di
 import android.app.Application
 import android.content.Context
 import com.vlad.finboard.app.App
-import com.vlad.finboard.data.db.CategoriesDao
-import com.vlad.finboard.data.db.FinboardDatabase
-import com.vlad.finboard.data.db.NotesDao
+import com.vlad.finboard.core.data.db.CategoriesDao
+import com.vlad.finboard.core.data.db.FinboardDatabase
+import com.vlad.finboard.core.data.db.FinancesDao
 import com.vlad.finboard.di.module.DatabaseModule
+import com.vlad.finboard.feature.finances.list.FinancesFragment
+import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -15,7 +17,8 @@ import javax.inject.Singleton
 @Component(modules = [DatabaseModule::class])
 interface AppComponent {
 
-    fun notesDao(): NotesDao
+    fun context(): Context
+    fun financesDao(): FinancesDao
     fun categoriesDao(): CategoriesDao
     fun finboardDatabase(): FinboardDatabase
     fun inject(app: App)

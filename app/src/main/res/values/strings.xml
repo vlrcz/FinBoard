@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">FinBoard</string>
+    <string name="tab_costs">Расходы</string>
+    <string name="tab_income">Доходы</string>
+    <string name="sum_txt_input">Сумма</string>
+    <string name="save_btn_txt">Сохранить</string>
+    <string name="fill_fields">Заполните поля</string>
+    <string name="cafe">Кафе</string>
+    <string name="tourism">Туризм</string>
+    <string name="food">Продукты</string>
+    <string name="technics">Техника</string>
+    <string name="health">Здоровье</string>
+    <string name="clothes">Одежда</string>
+    <string name="games">Игры</string>
+    <string name="sport">Спорт</string>
+    <string name="rental">Аренда</string>
+    <string name="salary">Зарплата</string>
+    <string name="deposits">Вклады</string>
+    <string name="grants">Степендия</string>
+    <string name="pension">Пенсия</string>
+    <string name="currency">руб.</string>
 </resources>

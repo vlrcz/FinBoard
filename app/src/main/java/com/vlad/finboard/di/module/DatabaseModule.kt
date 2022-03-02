@@ -2,9 +2,9 @@ package com.vlad.finboard.di.module
 
 import android.app.Application
 import androidx.room.Room
-import com.vlad.finboard.data.db.CategoriesDao
-import com.vlad.finboard.data.db.FinboardDatabase
-import com.vlad.finboard.data.db.NotesDao
+import com.vlad.finboard.core.data.db.CategoriesDao
+import com.vlad.finboard.core.data.db.FinboardDatabase
+import com.vlad.finboard.core.data.db.FinancesDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -29,8 +29,8 @@ class DatabaseModule {
     }
 
     @Provides
-    fun providesNotesDao(db: FinboardDatabase): NotesDao {
-        return db.notesDao()
+    fun providesFinancesDao(db: FinboardDatabase): FinancesDao {
+        return db.financesDao()
     }
 
     @Provides

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryLight">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/financeImg"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/financeNameTxt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/FinBoard.RoundedImageView"
+        tools:background="#9B4AC2"
+        tools:src="@drawable/ic_cafe" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/financeNameTxt"
+        style="@style/Text.Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/financeImg"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Кафе" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/financeSumTxt"
+        style="@style/Text.Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/medium_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1000 руб." />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

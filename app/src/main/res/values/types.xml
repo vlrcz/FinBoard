@@ -22,4 +22,8 @@
         <item name="android:textSize">@dimen/text_body_l</item>
     </style>
 
+    <style name="Text.Caption">
+        <item name="android:textSize">@dimen/text_caption</item>
+    </style>
+
 </resources>
