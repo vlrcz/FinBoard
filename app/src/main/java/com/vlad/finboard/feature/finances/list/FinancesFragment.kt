@@ -4,10 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vlad.finboard.R
 import com.vlad.finboard.app.appComponent
@@ -19,6 +21,10 @@ import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
+import com.vlad.finboard.feature.finances.list.FinancesListState.EditFinancesDetail
+import com.vlad.finboard.feature.finances.list.FinancesListState.FinancesList
+import com.vlad.finboard.feature.finances.list.FinancesListState.Loading
+import com.vlad.finboard.feature.finances.list.FinancesListState.NavigateToFinancesDetail
 import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
 import javax.inject.Inject
 import javax.inject.Provider
@@ -38,8 +44,22 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
     lateinit var viewModelProvider: Provider<FinancesViewModel>
     private val viewModel: FinancesViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
     private val binding: FragmentFinancesBinding by viewBinding(FragmentFinancesBinding::bind)
-    private val financeListAdapter = FinanceListAdapter() {
-        navigate(FragmentScreen(FinancesDetailFragment.newInstance(it), ADD))
+    private val financeListAdapter = FinanceListAdapter() { viewModel.onFinancesItemClicked(it) }
+    private var isBackFromDetail = false
+    lateinit var type: String
+
+    override fun onPause() {
+        super.onPause()
+        isBackFromDetail = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isBackFromDetail) {
+            viewModel.refresh(type)
+            binding.financesList.scrollToPosition(0)
+            isBackFromDetail = false
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -52,26 +72,30 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val type = requireArguments().getString(TYPE)
-        if (type != null) {
-            bindViewModel(type)
-        }
-        bindOpenFinancesDetailBtn()
+        type = requireArguments().getString(TYPE).toString()
+        bindViewModel()
         initList()
+        bindOpenFinancesDetailBtn()
     }
 
-    private fun bindViewModel(type: String) {
-        viewModel.fetchFinances(type)
+    private fun bindViewModel() {
+        viewModel.firstLoad(type)
+
         lifecycleScope.launchWhenStarted {
-            viewModel.finances.collect {
-                financeListAdapter.submitList(it)
+            viewModel.state.collect {
+                when (it) {
+                    is FinancesList -> financeListAdapter.submitList(it.list)
+                    is Loading -> updateLoadingState(it.isLoading)
+                    is NavigateToFinancesDetail -> navigate(FragmentScreen(FinancesDetailFragment(), ADD))
+                    is EditFinancesDetail -> navigate(FragmentScreen(FinancesDetailFragment.newInstance(it.model), ADD))
+                }
             }
         }
     }
 
     private fun bindOpenFinancesDetailBtn() {
         binding.openFinancesDetail.setOnClickListener {
-            navigate(FragmentScreen(FinancesDetailFragment(), ADD))
+            viewModel.openFinancesDetailButtonClicked()
         }
     }
 
@@ -80,6 +104,25 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
             adapter = financeListAdapter
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0) {
+                        val layoutManager = layoutManager as LinearLayoutManager
+                        val visibleItemCount = layoutManager.childCount
+                        val totalItemCount = layoutManager.itemCount
+                        val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            viewModel.loadMore(type)
+                        }
+                    }
+                }
+            })
         }
+    }
+
+    private fun updateLoadingState(isLoading: Boolean) {
+        binding.progressBar.isVisible = isLoading
     }
 }
