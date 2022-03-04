@@ -84,7 +84,14 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
         lifecycleScope.launchWhenStarted {
             viewModel.state.collect {
                 when (it) {
-                    is FinancesList -> financeListAdapter.submitList(it.list)
+                    is FinancesList -> {
+                        if (it.list.isNotEmpty()) {
+                            financeListAdapter.submitList(it.list)
+                            binding.emptyListTextView.visibility = View.GONE
+                        } else {
+                            binding.emptyListTextView.visibility = View.VISIBLE
+                        }
+                    }
                     is Loading -> updateLoadingState(it.isLoading)
                     is NavigateToFinancesDetail -> navigate(FragmentScreen(FinancesDetailFragment(), ADD))
                     is EditFinancesDetail -> navigate(FragmentScreen(FinancesDetailFragment.newInstance(it.model), ADD))
