@@ -36,7 +36,7 @@ class FinancesMapper @Inject constructor(
             categoryName = categoryName,
             categoryColor = categoryColor,
             categoryDrawable = categoryDrawable,
-            categoryType = category.type,
+            type = finance.type,
             sum = sum,
             createAt = createAt
         )

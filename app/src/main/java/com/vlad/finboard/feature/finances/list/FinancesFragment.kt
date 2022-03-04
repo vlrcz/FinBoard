@@ -93,7 +93,7 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
                         }
                     }
                     is Loading -> updateLoadingState(it.isLoading)
-                    is NavigateToFinancesDetail -> navigate(FragmentScreen(FinancesDetailFragment(), ADD))
+                    is NavigateToFinancesDetail -> navigate(FragmentScreen(FinancesDetailFragment.newInstance(type), ADD))
                     is EditFinancesDetail -> navigate(FragmentScreen(FinancesDetailFragment.newInstance(it.model), ADD))
                 }
             }

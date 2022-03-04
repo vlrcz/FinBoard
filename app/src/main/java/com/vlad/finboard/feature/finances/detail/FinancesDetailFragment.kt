@@ -14,6 +14,7 @@ import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
+import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.detail.di.DaggerFinancesDetailComponent
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
@@ -29,6 +30,12 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
                 arguments = bundleOf(DETAIL to finance)
             }
         }
+
+        fun newInstance(type: String): FinancesDetailFragment {
+            return FinancesDetailFragment().apply {
+                arguments = bundleOf(TYPE to type)
+            }
+        }
     }
 
     @Inject
@@ -38,6 +45,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
     private var _categoryId: Int? = null
     private var _createAt: Long? = null
     private var _financeId: String? = null
+    private var _type: String? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,6 +61,8 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         bindSaveButton()
         setEditTextFocusChangeListener()
         fillViewFromArguments()
+        val type = requireArguments().getString(TYPE)
+        if (type != null) _type = type
     }
 
     private fun fillViewFromArguments() {
@@ -61,6 +71,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         _categoryId = model.categoryId
         _createAt = model.createAt.dateMillis
         _financeId = model.id
+        _type = model.type
         binding.sumEditText.setText(model.sum.sumDouble.toString())
     }
 
@@ -71,14 +82,17 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
             val createAt = _createAt ?: System.currentTimeMillis()
             val updateAt = System.currentTimeMillis()
             val financeId = _financeId
+            val type = _type
             val sum = binding.sumEditText.text?.toString()?.toDouble()
-            if (categoryId != null && sum != null) {
+            if (categoryId != null && sum != null && type != null) {
                 viewModel.saveFinance(
                     financeId = financeId,
                     categoryId = categoryId,
                     sum = sum,
+                    type = type,
                     createAt = createAt,
-                    updateAt = updateAt
+                    updateAt = updateAt,
+
                 )
                 navigate(BackScreen())
             } else {

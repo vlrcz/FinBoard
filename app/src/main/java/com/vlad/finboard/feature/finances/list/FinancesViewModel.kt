@@ -3,7 +3,9 @@ package com.vlad.finboard.feature.finances.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vlad.finboard.feature.finances.FinancesConstants.LIMIT_PER_PAGE
+import com.vlad.finboard.feature.finances.model.DateModel
 import com.vlad.finboard.feature.finances.model.FinanceModel
+import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -50,7 +52,7 @@ class FinancesViewModel @Inject constructor(
                         pageCount++
                         pagingState.loadingPage = false
                     }
-                    pagingState = pagingState.copy(itemsList = pagingState.itemsList + it)
+                    pagingState = pagingState.copy(itemsList = (pagingState.itemsList + it).distinct())
                     stateChannel.send(FinancesListState.Loading(false))
                     stateChannel.send(FinancesListState.FinancesList(pagingState.itemsList))
                 }
