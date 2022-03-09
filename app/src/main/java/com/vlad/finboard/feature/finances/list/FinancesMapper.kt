@@ -2,6 +2,7 @@ package com.vlad.finboard.feature.finances.list
 
 import android.content.Context
 import android.graphics.Color
+import android.icu.util.UniversalTimeScale.toBigDecimal
 import com.vlad.finboard.R
 import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.core.data.db.models.FinanceEntity
@@ -27,7 +28,7 @@ class FinancesMapper @Inject constructor(
         val categoryName = context.getString(
             context.resources.getIdentifier(category.name, "string", context.packageName)
         )
-        val sumWithCurrency = finance.sum.toString() + " " + context.getString(R.string.currency)
+        val sumWithCurrency = finance.sum.toBigDecimal().toPlainString() + " " + context.getString(R.string.currency)
         val sum = SumModel(finance.sum, sumWithCurrency)
         val createAt = DateModel(finance.createAt.millisToDate(), finance.createAt)
         return FinanceModel(

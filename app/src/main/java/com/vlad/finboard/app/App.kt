@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.StrictMode
 import androidx.viewbinding.BuildConfig
 import com.vlad.finboard.core.data.db.FinboardDatabase
-import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.di.AppComponent
 import com.vlad.finboard.di.DaggerAppComponent
 import javax.inject.Inject
