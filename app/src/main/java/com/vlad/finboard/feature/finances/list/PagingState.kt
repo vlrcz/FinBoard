@@ -3,13 +3,17 @@ package com.vlad.finboard.feature.finances.list
 import com.vlad.finboard.feature.finances.model.Item
 
 data class PagingState(
-    val limit: Int,
-    var loadingPage: Boolean,
-    var pageCount: Int,
+    val loadingPage: Boolean,
+    val pageCount: Int,
     val itemsList: List<Item>,
-    var hasMore: Boolean,
-    var isFirstLoad: Boolean
+    val hasMore: Boolean,
+    val isFirstLoad: Boolean,
+    val type: String
 ) {
     val offset
-        get() = (pageCount - 1) * limit
+        get() = (pageCount - 1) * LIMIT_PER_PAGE
+
+    companion object {
+        const val LIMIT_PER_PAGE = 15
+    }
 }

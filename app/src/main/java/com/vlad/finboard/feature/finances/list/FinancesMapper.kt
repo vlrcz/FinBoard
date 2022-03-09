@@ -54,7 +54,7 @@ class FinancesMapper @Inject constructor(
         return map.flatMap {
             val items = mutableListOf<Item>()
             items.add(it.key)
-            items.addAll(it.value.sortedByDescending { it.createAt.dateMillis })
+            items.addAll(it.value)
             items
         }
     }

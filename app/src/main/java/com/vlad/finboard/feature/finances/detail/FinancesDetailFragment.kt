@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vlad.finboard.R
@@ -21,6 +22,7 @@ import com.vlad.finboard.hideSoftKeyboard
 import com.vlad.finboard.toast
 import javax.inject.Inject
 import javax.inject.Provider
+import timber.log.Timber
 
 class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
@@ -94,6 +96,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
                     updateAt = updateAt,
 
                 )
+                requireActivity().supportFragmentManager.setFragmentResult(DETAIL, Bundle())
                 navigate(BackScreen())
             } else {
                 toast(getString(R.string.fill_fields))

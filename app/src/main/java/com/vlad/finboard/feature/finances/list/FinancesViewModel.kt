@@ -2,20 +2,16 @@ package com.vlad.finboard.feature.finances.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vlad.finboard.feature.finances.FinancesConstants.LIMIT_PER_PAGE
-import com.vlad.finboard.feature.finances.model.DateModel
-import com.vlad.finboard.feature.finances.model.FinanceModel
-import java.util.Date
+import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -24,77 +20,75 @@ class FinancesViewModel @Inject constructor(
     private val financesMapper: FinancesMapper
 ) : ViewModel() {
 
-    private val stateChannel = Channel<FinancesListState>(Channel.BUFFERED)
-    val state = stateChannel.receiveAsFlow()
-
-    private var pagingState = PagingState(
-        limit = LIMIT_PER_PAGE,
+    private var state = PagingState(
         loadingPage = false,
         pageCount = 1,
         itemsList = emptyList(),
         hasMore = true,
-        isFirstLoad = false
+        isFirstLoad = false,
+        type = COSTS.name
     )
 
-    private fun fetchFinances(type: String) {
+    private val loadingFlow = MutableStateFlow(state.loadingPage)
+    val loading = loadingFlow.asStateFlow()
+    private val itemsFlow = MutableStateFlow(state.itemsList)
+    val itemsList = itemsFlow.asStateFlow()
+
+    private fun fetchFinances() {
         viewModelScope.launch {
-            flow { emit(financesRepository.fetchFinancesWithCategoryByType(type, pagingState.limit, pagingState.offset)) }
+            flow {
+                emit(
+                    financesRepository.fetchFinancesWithCategoryByType(
+                        state.type,
+                        PagingState.LIMIT_PER_PAGE,
+                        state.offset
+                    )
+                )
+            }
                 .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
                 .map {
-                    pagingState.hasMore = it.size >= LIMIT_PER_PAGE
+                    state = state.copy(hasMore = it.size >= PagingState.LIMIT_PER_PAGE)
                     financesMapper.mapEntities(it)
                 }
                 .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.Default)
                 .collect {
-                    with(pagingState) {
-                        pageCount++
-                        pagingState.loadingPage = false
-                    }
-                    pagingState = pagingState.copy(itemsList = (pagingState.itemsList + it).distinct())
-                    stateChannel.send(FinancesListState.Loading(false))
-                    stateChannel.send(FinancesListState.FinancesList(pagingState.itemsList))
+                    state =
+                        state.copy(
+                            pageCount = state.pageCount + 1,
+                            itemsList = (state.itemsList + it).distinct(),
+                            loadingPage = false
+                        )
+                    loadingFlow.value = state.loadingPage
+                    itemsFlow.value = state.itemsList
                 }
         }
     }
 
     fun firstLoad(type: String) {
-        if (!pagingState.isFirstLoad) {
-            load(type)
-            pagingState.isFirstLoad = true
+        if (!state.isFirstLoad) {
+            state = state.copy(type = type, isFirstLoad = true)
+            load()
         }
     }
 
-    fun loadMore(type: String) {
-        if (!pagingState.loadingPage && pagingState.hasMore) {
-            load(type)
+    fun loadMore() {
+        if (!state.loadingPage && state.hasMore) {
+            load()
         }
     }
 
-    fun refresh(type: String) {
-        pagingState = pagingState.copy(pageCount = 1, hasMore = true, itemsList = emptyList())
-        load(type)
+    fun refresh() {
+        state = state.copy(pageCount = 1, hasMore = true, itemsList = emptyList())
+        load()
     }
 
-    private fun load(type: String) {
+    private fun load() {
         viewModelScope.launch {
-            pagingState.loadingPage = true
-            stateChannel.send(FinancesListState.Loading(true))
-            fetchFinances(type)
-        }
-    }
-
-
-    fun openFinancesDetailButtonClicked() {
-        viewModelScope.launch {
-            stateChannel.send(FinancesListState.NavigateToFinancesDetail)
-        }
-    }
-
-    fun onFinancesItemClicked(model: FinanceModel) {
-        viewModelScope.launch {
-            stateChannel.send(FinancesListState.EditFinancesDetail(model))
+            state = state.copy(loadingPage = true)
+            loadingFlow.value = state.loadingPage
+            fetchFinances()
         }
     }
 }
