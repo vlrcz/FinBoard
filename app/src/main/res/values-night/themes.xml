@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.FinBoard" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <!-- Customize your theme here. -->
+        <item name="android:colorBackground">@color/colorSecondary</item>
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+        <item name="materialButtonStyle">@style/FinBoard.Button</item>
+        <item name="textInputStyle">@style/FinBoard.TextInputLayout</item>
+        <item name="tabStyle">@style/FinBoard.TabLayout</item>
+        <item name="toolbarStyle">@style/FinBoard.Toolbar</item>
+    </style>
+</resources>

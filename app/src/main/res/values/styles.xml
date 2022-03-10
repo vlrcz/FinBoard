@@ -25,6 +25,7 @@
     <style name="FinBoard.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="titleTextAppearance">@style/Text.Head</item>
         <item name="titleTextColor">@color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="FinBoard.RoundedImageView" parent="">
