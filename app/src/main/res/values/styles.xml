@@ -9,6 +9,7 @@
     <style name="FinBoard.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/white</item>
         <item name="hintTextAppearance">@style/Text.Body.L</item>
+        <item name="android:textColorHint">@color/colorSecondary</item>
     </style>
 
     <style name="FinBoard.TabLayout" parent="Widget.Material3.TabLayout">
