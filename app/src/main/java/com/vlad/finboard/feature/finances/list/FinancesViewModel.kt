@@ -29,10 +29,8 @@ class FinancesViewModel @Inject constructor(
         type = COSTS.name
     )
 
-    private val loadingFlow = MutableStateFlow(state.loadingPage)
-    val loading = loadingFlow.asStateFlow()
-    private val itemsFlow = MutableStateFlow(state.itemsList)
-    val itemsList = itemsFlow.asStateFlow()
+    private val pagingStateFlow = MutableStateFlow(state)
+    val pagingState = pagingStateFlow.asStateFlow()
 
     private fun fetchFinances() {
         viewModelScope.launch {
@@ -47,28 +45,24 @@ class FinancesViewModel @Inject constructor(
             }
                 .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
-                .map {
-                    state = state.copy(hasMore = it.size >= PagingState.LIMIT_PER_PAGE)
-                    financesMapper.mapEntities(it)
-                }
+                .map { financesMapper.mapEntities(it) }
                 .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.Default)
                 .collect {
-                    state =
-                        state.copy(
+                    state = state.copy(
+                            hasMore = it.size >= PagingState.LIMIT_PER_PAGE,
                             pageCount = state.pageCount + 1,
                             itemsList = (state.itemsList + it).distinct(),
                             loadingPage = false
                         )
-                    loadingFlow.value = state.loadingPage
-                    itemsFlow.value = state.itemsList
+                    pagingStateFlow.value = state
                 }
         }
     }
 
     fun firstLoad(type: String) {
         if (!state.isFirstLoad) {
-            state = state.copy(type = type, isFirstLoad = true)
+            state = state.copy(type = type, isFirstLoad = true, loadingPage = true)
             load()
         }
     }
@@ -80,14 +74,13 @@ class FinancesViewModel @Inject constructor(
     }
 
     fun refresh() {
-        state = state.copy(pageCount = 1, hasMore = true, itemsList = emptyList())
+        state = state.copy(pageCount = 1, hasMore = true, itemsList = emptyList(), loadingPage = true)
         load()
     }
 
     private fun load() {
         viewModelScope.launch {
-            state = state.copy(loadingPage = true)
-            loadingFlow.value = state.loadingPage
+            pagingStateFlow.value = state
             fetchFinances()
         }
     }

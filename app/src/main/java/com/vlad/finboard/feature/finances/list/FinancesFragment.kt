@@ -6,7 +6,6 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,11 +23,9 @@ import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
 import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
-import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 
 class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
@@ -75,15 +72,10 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
     private fun bindViewModel() {
         lifecycleScope.launchWhenStarted {
-            viewModel.loading.collect {
-                updateLoadingState(it)
-            }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.itemsList.collect {
-                financeListAdapter.submitList(it)
-                if (it.isNotEmpty()) {
+            viewModel.pagingState.collect {
+                updateLoadingState(it.loadingPage)
+                financeListAdapter.submitList(it.itemsList)
+                if (it.itemsList.isNotEmpty()) {
                     binding.emptyListTextView.visibility = View.GONE
                 } else {
                     binding.emptyListTextView.visibility = View.VISIBLE
