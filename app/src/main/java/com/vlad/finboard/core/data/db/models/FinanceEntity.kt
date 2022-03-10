@@ -19,6 +19,7 @@ data class FinanceEntity(
     val id: String,
     val categoryId: Int,
     val sum: Double,
+    val type: String,
     val createAt: Long,
     val updateAt: Long
 )

@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.core.data.db.models.FinanceEntity
 import com.vlad.finboard.core.data.db.models.FinanceWithCategoryEntity
 
@@ -17,9 +16,8 @@ interface FinancesDao {
 
     @Transaction
     @Query(
-        "SELECT * FROM finances " +
-                "INNER JOIN categories ON finances.categoryId = categories.id " +
-                "WHERE categories.type = :type ORDER BY finances.createAt DESC"
+        "SELECT * FROM finances WHERE finances.type = :type " +
+                "ORDER BY finances.createAt DESC LIMIT :limit OFFSET :offset"
     )
-    suspend fun fetchFinancesWithCategoryByType(type: String): List<FinanceWithCategoryEntity>
+    suspend fun fetchFinancesWithCategoryByType(type: String, limit: Int, offset: Int): List<FinanceWithCategoryEntity>
 }

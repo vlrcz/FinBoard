@@ -38,7 +38,7 @@
             android:id="@+id/sumEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:maxLines="1"
             android:textColor="@color/colorSecondary"/>
     </com.google.android.material.textfield.TextInputLayout>

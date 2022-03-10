@@ -16,7 +16,7 @@ data class FinanceModel(
     val categoryColor: Int,
     @DrawableRes
     val categoryDrawable: Int,
-    val categoryType: String,
+    val type: String,
     val sum: SumModel,
     val createAt: DateModel
 ) : Parcelable, Item {
