@@ -19,4 +19,5 @@
     <string name="grants">Степендия</string>
     <string name="pension">Пенсия</string>
     <string name="currency">руб.</string>
+    <string name="emptylist">Список заметок пуст</string>
 </resources>

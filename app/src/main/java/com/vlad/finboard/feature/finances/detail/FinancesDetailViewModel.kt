@@ -23,13 +23,14 @@ class FinancesDetailViewModel @Inject constructor(
         financeId: String?,
         categoryId: Int,
         sum: Double,
+        type: String,
         createAt: Long,
         updateAt: Long
     ) {
         viewModelScope.launch {
             val uniqueId = financeId ?: UUID.randomUUID().toString()
             flow {
-                emit(FinanceEntity(uniqueId, categoryId, sum, createAt, updateAt))
+                emit(FinanceEntity(uniqueId, categoryId, sum, type, createAt, updateAt))
             }
                 .onEach {
                     financesRepository.saveFinance(it)
