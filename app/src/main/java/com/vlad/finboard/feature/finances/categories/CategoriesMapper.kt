@@ -14,9 +14,12 @@ class CategoriesMapper @Inject constructor(
         val color = Color.parseColor(category.color)
         val drawable =
             context.resources.getIdentifier(category.res, "drawable", context.packageName)
+        val name = context.getString(
+            context.resources.getIdentifier(category.name, "string", context.packageName)
+        )
         return CategoryModel(
             id = category.id,
-            name = category.name,
+            name = name,
             type = category.type,
             color = color,
             drawable = drawable

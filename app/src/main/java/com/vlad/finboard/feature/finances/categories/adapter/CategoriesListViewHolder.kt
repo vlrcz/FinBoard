@@ -15,7 +15,7 @@ class CategoriesListViewHolder(
     private val binding: ItemCategoryBinding = ItemCategoryBinding.bind(view)
 
     init {
-        binding.root.setOnClickListener {
+        binding.categoryImg.setOnClickListener {
             val item =
                 (bindingAdapter as? CategoriesListAdapter)?.currentList?.get(bindingAdapterPosition)
                     ?: return@setOnClickListener
@@ -34,5 +34,6 @@ class CategoriesListViewHolder(
         } else {
             binding.categoryImg.background = null
         }
+        binding.categoryTxt.text = category.name
     }
 }
