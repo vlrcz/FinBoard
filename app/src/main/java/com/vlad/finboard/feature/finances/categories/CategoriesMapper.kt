@@ -6,7 +6,7 @@ import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.feature.finances.model.CategoryModel
 import javax.inject.Inject
 
-class CategoryMapper @Inject constructor(
+class CategoriesMapper @Inject constructor(
     private val context: Context
 ) {
 
@@ -15,11 +15,11 @@ class CategoryMapper @Inject constructor(
         val drawable =
             context.resources.getIdentifier(category.res, "drawable", context.packageName)
         return CategoryModel(
-            category.id,
-            category.name,
-            category.type,
-            color,
-            drawable
+            id = category.id,
+            name = category.name,
+            type = category.type,
+            color = color,
+            drawable = drawable
         )
     }
 }
