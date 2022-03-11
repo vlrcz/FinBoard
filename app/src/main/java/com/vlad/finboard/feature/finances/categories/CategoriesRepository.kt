@@ -10,4 +10,8 @@ class CategoriesRepository @Inject constructor(
     suspend fun fetchCategory(id: Int): CategoryEntity {
         return categoriesDao.fetchCategoryById(id)
     }
+
+    suspend fun fetchCategoriesListByType(type: String): List<CategoryEntity> {
+        return categoriesDao.fetchCategoriesByType(type)
+    }
 }
