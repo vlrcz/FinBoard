@@ -59,10 +59,6 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
         navigator.navigate(TabScreen(screen))
     }
 
-    private fun detachTab(tag: String) {
-        navigator.detach(tag)
-    }
-
     private fun bindTabLayout() {
         binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab?) {
@@ -72,12 +68,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
                 }
             }
 
-            override fun onTabUnselected(tab: Tab?) {
-                when (tab?.position) {
-                    0 -> detachTab(NavigationConstants.COSTS)
-                    1 -> detachTab(NavigationConstants.INCOME)
-                }
-            }
+            override fun onTabUnselected(tab: Tab?) {}
             override fun onTabReselected(tab: Tab?) {}
         })
     }

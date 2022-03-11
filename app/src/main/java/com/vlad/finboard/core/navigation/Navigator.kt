@@ -17,11 +17,7 @@ open class Navigator(
     open fun navigate(screen: NavigationScreen): Boolean {
         return when (screen) {
             is FragmentScreen -> {
-                if (fragmentManager.findFragmentByTag(screen.tag) == null) {
-                    replace(containerId, screen.fragment, screen.tag)
-                } else {
-                    attach(screen.tag)
-                }
+                replace(containerId, screen.fragment, screen.tag)
                 true
             }
             is BackScreen -> {
@@ -38,22 +34,6 @@ open class Navigator(
             .setPrimaryNavigationFragment(fragment)
             .addToBackStack(tag)
             .replace(containerId, fragment, tag)
-            .commit()
-    }
-
-    open fun attach(tag: String) {
-        val fragment = fragmentManager.findFragmentByTag(tag) ?: return
-        fragmentManager
-            .beginTransaction()
-            .attach(fragment)
-            .commit()
-    }
-
-    open fun detach(tag: String) {
-        val fragment = fragmentManager.findFragmentByTag(tag) ?: return
-        fragmentManager
-            .beginTransaction()
-            .detach(fragment)
             .commit()
     }
 }
