@@ -7,6 +7,7 @@ import androidx.viewbinding.BuildConfig
 import com.vlad.finboard.core.data.db.FinboardDatabase
 import com.vlad.finboard.di.AppComponent
 import com.vlad.finboard.di.DaggerAppComponent
+import com.vlad.finboard.feature.finances.categories.CategoriesAppInitializer
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -16,6 +17,9 @@ class App : Application() {
 
     @Inject
     lateinit var database: FinboardDatabase
+
+    @Inject
+    lateinit var categoriesAppInitializer: CategoriesAppInitializer
 
     override fun onCreate() {
         super.onCreate()
@@ -36,6 +40,7 @@ class App : Application() {
         appComponent.inject(this)
 
         initDb()
+        categoriesAppInitializer.init()
     }
 
     private fun initDb() {
