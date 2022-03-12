@@ -11,7 +11,7 @@ import com.vlad.finboard.core.navigation.screen.NavigationScreen
 open class Navigator(
     private val activity: FragmentActivity,
     private val containerId: Int = R.id.container,
-    private val fragmentManager: FragmentManager = activity.supportFragmentManager
+    protected val fragmentManager: FragmentManager = activity.supportFragmentManager
 ) {
 
     open fun navigate(screen: NavigationScreen): Boolean {
