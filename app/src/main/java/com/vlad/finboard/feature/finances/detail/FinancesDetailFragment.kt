@@ -20,7 +20,7 @@ import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
 import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
-import com.vlad.finboard.feature.finances.categories.adapter.CategoriesListAdapter
+import com.vlad.finboard.feature.categories.adapter.CategoriesListAdapter
 import com.vlad.finboard.feature.finances.detail.di.DaggerFinancesDetailComponent
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
@@ -28,7 +28,6 @@ import com.vlad.finboard.toast
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 
 class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
@@ -50,7 +49,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
     lateinit var viewModelProvider: Provider<FinancesDetailViewModel>
     private val viewModel: FinancesDetailViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
     private val binding: FragmentFinancesDetailBinding by viewBinding(FragmentFinancesDetailBinding::bind)
-    private val categoryListAdapter = CategoriesListAdapter() { viewModel.changeCategory(it.id) }
+    private val categoryListAdapter = CategoriesListAdapter() { viewModel.clickedOnCategory(it.id) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -58,6 +57,14 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
             .factory()
             .create(context.appComponent)
             .inject(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val type = requireArguments().getString(TYPE)
+        if (type != null) {
+            viewModel.fetchCategoriesByType(type)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,20 +75,19 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         fillViewFromArguments()
         bindViewModel()
         initCategoriesList()
-        val type = requireArguments().getString(TYPE).toString()
-        viewModel.fetchCategories(type) //todo один раз -> сделать менеджер категорий
     }
 
     private fun fillViewFromArguments() {
         if (arguments == null) return
         val model = requireArguments().getParcelable(DETAIL) as? FinanceModel ?: return
-        viewModel.restoreStateFromArgs(model) //todo не отображается список категорий
+        viewModel.restoreStateFromArgs(model)
     }
 
     private fun bindViewModel() {
         lifecycleScope.launchWhenCreated {
             viewModel.detailState.collect {
-                categoryListAdapter.submitList(it.categoriesList) //todo обновить список после смены категории
+                categoryListAdapter.submitList(it.categoriesList)
+                categoryListAdapter.notifyDataSetChanged()//todo удалить
 
                 if (it.sum != 0.0) {
                     binding.sumEditText.setText(it.sum.toString())

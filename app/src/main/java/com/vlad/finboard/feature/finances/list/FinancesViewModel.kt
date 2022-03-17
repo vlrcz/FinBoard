@@ -79,9 +79,7 @@ class FinancesViewModel @Inject constructor(
     }
 
     private fun load() {
-        viewModelScope.launch {
-            pagingStateFlow.value = state
-            fetchFinances()
-        }
+        pagingStateFlow.value = state
+        fetchFinances()
     }
 }

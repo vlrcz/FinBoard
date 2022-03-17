@@ -7,7 +7,7 @@ import androidx.viewbinding.BuildConfig
 import com.vlad.finboard.core.data.db.FinboardDatabase
 import com.vlad.finboard.di.AppComponent
 import com.vlad.finboard.di.DaggerAppComponent
-import com.vlad.finboard.feature.finances.categories.CategoriesAppInitializer
+import com.vlad.finboard.feature.categories.CategoriesAppInitializer
 import javax.inject.Inject
 import timber.log.Timber
 

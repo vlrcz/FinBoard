@@ -1,10 +1,9 @@
-package com.vlad.finboard.feature.finances.categories.adapter
+package com.vlad.finboard.feature.categories.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.vlad.finboard.databinding.ItemCategoryBinding
-import com.vlad.finboard.databinding.ItemFinanceBinding
 import com.vlad.finboard.feature.finances.model.CategoryModel
 
 class CategoriesListViewHolder(

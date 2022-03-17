@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances.categories
+package com.vlad.finboard.feature.categories
 
 import javax.inject.Inject
 import javax.inject.Singleton

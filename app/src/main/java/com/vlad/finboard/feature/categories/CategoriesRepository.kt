@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances.categories
+package com.vlad.finboard.feature.categories
 
 import com.vlad.finboard.core.data.db.CategoriesDao
 import com.vlad.finboard.core.data.db.models.CategoryEntity

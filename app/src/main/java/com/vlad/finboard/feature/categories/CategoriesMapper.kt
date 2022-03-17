@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances.categories
+package com.vlad.finboard.feature.categories
 
 import android.content.Context
 import android.graphics.Color

@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances.categories.adapter
+package com.vlad.finboard.feature.categories.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

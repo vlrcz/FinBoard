@@ -1,11 +1,10 @@
-package com.vlad.finboard.feature.finances.categories
+package com.vlad.finboard.feature.categories
 
 import com.vlad.finboard.feature.finances.model.CategoryModel
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
