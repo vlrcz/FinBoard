@@ -4,15 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vlad.finboard.core.data.db.models.FinanceEntity
 import com.vlad.finboard.feature.categories.CategoriesManager
+import com.vlad.finboard.feature.finances.detail.FinancesDetailState.Companion.DEFAULT_SUM
 import com.vlad.finboard.feature.finances.list.FinancesRepository
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
 import java.util.UUID
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -28,53 +27,52 @@ class FinancesDetailViewModel @Inject constructor(
     private val categoriesManager: CategoriesManager
 ) : ViewModel() {
 
-    private var state = DetailState(
+    private var state = FinancesDetailState(
+        financeId = UUID.randomUUID().toString(),
+        createAt = System.currentTimeMillis(),
         categoriesList = emptyList(),
         selectedCategoryId = 1,
-        financeId = UUID.randomUUID().toString(),
-        sum = 0.0,
         type = COSTS.name,
-        createAt = System.currentTimeMillis()
+        isSaveSuccess = false,
+        sum = DEFAULT_SUM
     )
 
     private val detailStateFlow = MutableStateFlow(state)
-    val detailState = detailStateFlow.asStateFlow()
-    private val saveSuccessSharedFlow = MutableSharedFlow<Boolean>(1)
-    val saveSuccess = saveSuccessSharedFlow.asSharedFlow()
+    val detailFlow = detailStateFlow.asStateFlow()
 
-    fun clickedOnCategory(id: Int) {
-        val list = state.categoriesList
-        list.forEach { it.isSelected = it.id == id }
-        state = state.copy(selectedCategoryId = id, categoriesList = list)
-        detailStateFlow.tryEmit(state)
+    init {
+        fetchCategories()
     }
 
-    fun restoreStateFromArgs(model: FinanceModel) {
-        state = state.copy(
-            selectedCategoryId = model.categoryId,
-            financeId = model.id,
-            sum = model.sum.sumDouble,
-            createAt = model.createAt.dateMillis
-        )
-        fetchCategoriesByType(model.type)
-        detailStateFlow.tryEmit(state)
+    fun setType(type: String) {
+        if (state.type != type) {
+            state = state.copy(type = type)
+            fetchCategories()
+        }
     }
 
-    fun fetchCategoriesByType(type: String) {
-        state = state.copy(type = type)
+    private fun fetchCategories() {
         viewModelScope.launch {
-            categoriesManager.categories
+            categoriesManager.categoriesFlow
                 .map { it.filter { it.type == state.type } }
                 .onEach {
-                    it.forEach {model ->
-                        model.isSelected = model.id == state.selectedCategoryId
+                    it.forEachIndexed { index, model ->
+                        model.isSelected = index == 0
                     }
                 }
+                .flowOn(Dispatchers.Default)
                 .collect {
-                    state = state.copy(categoriesList = it)
-                    detailStateFlow.tryEmit(state)
+                    state =
+                        state.copy(categoriesList = it, selectedCategoryId = it[0].id)
+                    detailStateFlow.value = state
                 }
         }
+    }
+
+    fun clickedOnCategory(id: Int) {
+        state.categoriesList.forEach { it.isSelected = it.id == id }
+        state = state.copy(selectedCategoryId = id)
+        detailStateFlow.value = state
     }
 
     fun saveFinance(sum: Double) {
@@ -94,7 +92,36 @@ class FinancesDetailViewModel @Inject constructor(
                 .onEach { financesRepository.saveFinance(it) }
                 .catch { Timber.d("save finance error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
-                .collect { saveSuccessSharedFlow.tryEmit(true) }
+                .collect {
+                    state = state.copy(isSaveSuccess = true)
+                    detailStateFlow.value = state
+                }
         }
+    }
+
+    fun restoreStateFromFinanceModel(model: FinanceModel) {
+        state.categoriesList.forEach { it.isSelected = it.id == model.categoryId }
+        state = state.copy(
+            financeId = model.id,
+            createAt = model.createAt.dateMillis,
+            isSaveSuccess = false,
+            sum = model.sum.sumDouble
+        )
+        detailStateFlow.value = state
+    }
+
+    fun resetState() {
+        val selected = state.categoriesList[0].id //todo дублируется код
+        state.categoriesList.forEachIndexed { index, model ->
+            model.isSelected = index == 0
+        }
+        state = state.copy(
+            financeId = UUID.randomUUID().toString(),
+            createAt = System.currentTimeMillis(),
+            selectedCategoryId = selected,
+            isSaveSuccess = false,
+            sum = DEFAULT_SUM
+        )
+        detailStateFlow.value = state
     }
 }

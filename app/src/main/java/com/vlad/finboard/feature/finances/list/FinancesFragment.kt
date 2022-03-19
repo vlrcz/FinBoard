@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,10 +19,10 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.databinding.FragmentFinancesBinding
 import com.vlad.finboard.di.ViewModelFactory
-import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
 import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
+import com.vlad.finboard.feature.finances.detail.FinancesDetailViewModel
 import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
 import javax.inject.Inject
 import javax.inject.Provider
@@ -42,8 +43,13 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
     private val viewModel: FinancesViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
     private val binding: FragmentFinancesBinding by viewBinding(FragmentFinancesBinding::bind)
     private val financeListAdapter = FinanceListAdapter() {
-        navigate(FragmentScreen(FinancesDetailFragment.newInstance(it), ADD))
+        detailViewModel.restoreStateFromFinanceModel(it)
+        navigate(FragmentScreen(FinancesDetailFragment(), ADD))
     }
+
+    @Inject
+    lateinit var detailViewModelProvider: Provider<FinancesDetailViewModel>
+    private val detailViewModel: FinancesDetailViewModel by activityViewModels { ViewModelFactory { detailViewModelProvider.get() } }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -55,39 +61,42 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val type = requireArguments().getString(TYPE).toString()
-        viewModel.firstLoad(type)
+        val type = requireArguments().getString(TYPE)
+        if (type != null) {
+            viewModel.firstLoad(type)
+            detailViewModel.setType(type)
+        }
         bindViewModel()
         initList()
-        bindOpenFinancesDetailBtn(type)
+        bindOpenFinancesDetailBtn()
         refreshListAfterDetail()
     }
 
     private fun refreshListAfterDetail() {
-        requireActivity().supportFragmentManager.setFragmentResultListener(DETAIL, this) { _, _ ->
-            viewModel.refresh()
-            binding.financesList.scrollToPosition(0)
+        lifecycleScope.launchWhenStarted {
+            detailViewModel.detailFlow.collect {
+                if (it.isSaveSuccess) {
+                    viewModel.refresh()
+                    binding.financesList.scrollToPosition(0)
+                }
+            }
         }
     }
 
     private fun bindViewModel() {
         lifecycleScope.launchWhenStarted {
             viewModel.pagingState.collect {
-                updateLoadingState(it.loadingPage)
+                binding.progressBar.isVisible = it.loadingPage
                 financeListAdapter.submitList(it.itemsList)
-                if (it.itemsList.isNotEmpty()) {
-                    binding.emptyListTextView.visibility = View.GONE
-                } else {
-                    binding.emptyListTextView.visibility = View.VISIBLE
-                }
+                binding.emptyListTextView.isVisible = it.itemsList.isEmpty()
             }
         }
     }
 
-
-    private fun bindOpenFinancesDetailBtn(type: String) {
+    private fun bindOpenFinancesDetailBtn() {
         binding.openFinancesDetail.setOnClickListener {
-            navigate(FragmentScreen(FinancesDetailFragment.newInstance(type), ADD))
+            detailViewModel.resetState()
+            navigate(FragmentScreen(FinancesDetailFragment(), ADD))
         }
     }
 
@@ -110,9 +119,5 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
                 }
             })
         }
-    }
-
-    private fun updateLoadingState(isLoading: Boolean) {
-        binding.progressBar.isVisible = isLoading
     }
 }

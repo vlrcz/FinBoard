@@ -19,8 +19,8 @@ class CategoriesManager @Inject constructor(
     private val categoriesMapper: CategoriesMapper
 ) {
 
-    private val categoriesListener = MutableStateFlow<List<CategoryModel>>(emptyList())
-    val categories = categoriesListener.asStateFlow()
+    private val categoriesStateFlow = MutableStateFlow<List<CategoryModel>>(emptyList())
+    val categoriesFlow = categoriesStateFlow.asStateFlow()
 
     suspend fun fetchCategories() {
         flow { emit(categoriesRepository.fetchCategoriesList()) }
@@ -29,6 +29,6 @@ class CategoriesManager @Inject constructor(
             .map { it.map { categoriesMapper.mapEntityToModel(it) } }
             .catch { Timber.e("map categories error ${it.localizedMessage}") }
             .flowOn(Dispatchers.Default)
-            .collect { categoriesListener.value = it }
+            .collect { categoriesStateFlow.value = it }
     }
 }
