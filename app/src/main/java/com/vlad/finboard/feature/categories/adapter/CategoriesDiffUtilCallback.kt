@@ -11,4 +11,9 @@ class CategoriesDiffUtilCallback : ItemCallback<CategoryModel>() {
     override fun areContentsTheSame(oldItem: CategoryModel, newItem: CategoryModel): Boolean {
         return oldItem == newItem
     }
+
+    override fun getChangePayload(oldItem: CategoryModel, newItem: CategoryModel): Any? {
+
+        return super.getChangePayload(oldItem, newItem)
+    }
 }

@@ -28,11 +28,19 @@ class CategoriesListViewHolder(
             .load(category.drawable)
             .into(binding.categoryImg)
 
+        bindBackground(category)
+        binding.categoryTxt.text = category.name
+    }
+
+    private fun bindBackground(category: CategoryModel) {
         if (category.isSelected) {
             binding.categoryImg.setBackgroundColor(category.color)
         } else {
             binding.categoryImg.background = null
         }
-        binding.categoryTxt.text = category.name
+    }
+
+    fun bind(category: CategoryModel, payload: List<Any>) {
+
     }
 }

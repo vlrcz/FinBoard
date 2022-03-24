@@ -19,4 +19,15 @@ class CategoriesListAdapter(
         holder.bind(getItem(position))
     }
 
+    override fun onBindViewHolder(
+        holder: CategoriesListViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isNotEmpty()) {
+            holder.bind(getItem(position), payloads)
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
 }

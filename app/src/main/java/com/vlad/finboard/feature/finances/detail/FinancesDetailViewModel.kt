@@ -6,6 +6,7 @@ import com.vlad.finboard.core.data.db.models.FinanceEntity
 import com.vlad.finboard.feature.categories.CategoriesManager
 import com.vlad.finboard.feature.finances.detail.FinancesDetailState.Companion.DEFAULT_SUM
 import com.vlad.finboard.feature.finances.list.FinancesRepository
+import com.vlad.finboard.feature.finances.model.CategoryModel
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
 import java.util.UUID
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -33,46 +35,54 @@ class FinancesDetailViewModel @Inject constructor(
         categoriesList = emptyList(),
         selectedCategoryId = 1,
         type = COSTS.name,
-        isSaveSuccess = false,
+        isSaveSuccess = false, //todo В sharedFlow
         sum = DEFAULT_SUM
     )
 
     private val detailStateFlow = MutableStateFlow(state)
     val detailFlow = detailStateFlow.asStateFlow()
 
-    init {
-        fetchCategories()
-    }
-
-    fun setType(type: String) {
-        if (state.type != type) {
-            state = state.copy(type = type)
-            fetchCategories()
-        }
-    }
-
-    private fun fetchCategories() {
+    fun fetchCategoriesByType(type: String) {
         viewModelScope.launch {
             categoriesManager.categoriesFlow
-                .map { it.filter { it.type == state.type } }
-                .onEach {
-                    it.forEachIndexed { index, model ->
-                        model.isSelected = index == 0
-                    }
-                }
+                .map { it[type] }
+                .filterNotNull()
+                .onEach {  }
                 .flowOn(Dispatchers.Default)
                 .collect {
                     state =
-                        state.copy(categoriesList = it, selectedCategoryId = it[0].id)
+                        state.copy(categoriesList = it, selectedCategoryId = it[0].id, type = type)
                     detailStateFlow.value = state
                 }
         }
     }
 
-    fun clickedOnCategory(id: Int) {
-        state.categoriesList.forEach { it.isSelected = it.id == id }
-        state = state.copy(selectedCategoryId = id)
+    //todo переименовать
+    fun restoreStateFromFinanceModel(model: FinanceModel) {
+        fetchCategoriesByType(model.type)
+        val list = mapListBySelectedCategory(model.categoryId)
+        state = state.copy(
+            financeId = model.id,
+            createAt = model.createAt.dateMillis,
+            sum = model.sum.sumDouble,
+            selectedCategoryId = model.categoryId,
+            categoriesList = list
+        )
         detailStateFlow.value = state
+    }
+
+    fun clickedOnCategory(id: Int) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val list = mapListBySelectedCategory(id)
+            state = state.copy(selectedCategoryId = id, categoriesList = list)
+            detailStateFlow.value = state
+        }
+    }
+
+    private fun mapListBySelectedCategory(id: Int): List<CategoryModel> {
+        return state.categoriesList.map {
+            it.copy(isSelected = it.id == id)
+        }
     }
 
     fun saveFinance(sum: Double) {
@@ -97,31 +107,5 @@ class FinancesDetailViewModel @Inject constructor(
                     detailStateFlow.value = state
                 }
         }
-    }
-
-    fun restoreStateFromFinanceModel(model: FinanceModel) {
-        state.categoriesList.forEach { it.isSelected = it.id == model.categoryId }
-        state = state.copy(
-            financeId = model.id,
-            createAt = model.createAt.dateMillis,
-            isSaveSuccess = false,
-            sum = model.sum.sumDouble
-        )
-        detailStateFlow.value = state
-    }
-
-    fun resetState() {
-        val selected = state.categoriesList[0].id //todo дублируется код
-        state.categoriesList.forEachIndexed { index, model ->
-            model.isSelected = index == 0
-        }
-        state = state.copy(
-            financeId = UUID.randomUUID().toString(),
-            createAt = System.currentTimeMillis(),
-            selectedCategoryId = selected,
-            isSaveSuccess = false,
-            sum = DEFAULT_SUM
-        )
-        detailStateFlow.value = state
     }
 }

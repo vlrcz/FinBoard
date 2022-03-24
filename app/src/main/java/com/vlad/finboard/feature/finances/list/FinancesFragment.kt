@@ -19,6 +19,7 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.databinding.FragmentFinancesBinding
 import com.vlad.finboard.di.ViewModelFactory
+import com.vlad.finboard.feature.finances.FinancesConstants
 import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
@@ -27,6 +28,7 @@ import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
@@ -43,13 +45,8 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
     private val viewModel: FinancesViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
     private val binding: FragmentFinancesBinding by viewBinding(FragmentFinancesBinding::bind)
     private val financeListAdapter = FinanceListAdapter() {
-        detailViewModel.restoreStateFromFinanceModel(it)
-        navigate(FragmentScreen(FinancesDetailFragment(), ADD))
+        navigate(FragmentScreen(FinancesDetailFragment.newInstance(it), ADD))
     }
-
-    @Inject
-    lateinit var detailViewModelProvider: Provider<FinancesDetailViewModel>
-    private val detailViewModel: FinancesDetailViewModel by activityViewModels { ViewModelFactory { detailViewModelProvider.get() } }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -64,22 +61,17 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
         val type = requireArguments().getString(TYPE)
         if (type != null) {
             viewModel.firstLoad(type)
-            detailViewModel.setType(type)
+            bindOpenFinancesDetailBtn(type)
         }
         bindViewModel()
         initList()
-        bindOpenFinancesDetailBtn()
         refreshListAfterDetail()
     }
 
     private fun refreshListAfterDetail() {
-        lifecycleScope.launchWhenStarted {
-            detailViewModel.detailFlow.collect {
-                if (it.isSaveSuccess) {
-                    viewModel.refresh()
-                    binding.financesList.scrollToPosition(0)
-                }
-            }
+        requireActivity().supportFragmentManager.setFragmentResultListener(FinancesConstants.DETAIL, this) { _, _ ->
+            viewModel.refresh()
+            binding.financesList.scrollToPosition(0)
         }
     }
 
@@ -93,10 +85,9 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
         }
     }
 
-    private fun bindOpenFinancesDetailBtn() {
+    private fun bindOpenFinancesDetailBtn(type: String) {
         binding.openFinancesDetail.setOnClickListener {
-            detailViewModel.resetState()
-            navigate(FragmentScreen(FinancesDetailFragment(), ADD))
+            navigate(FragmentScreen(FinancesDetailFragment.newInstance(type), ADD))
         }
     }
 
