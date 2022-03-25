@@ -74,7 +74,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         }
         if (model != null) {
             bindUpdateButton(model)
-            binding.sumEditText.setText(model.sum.sumDouble.toBigDecimal().toPlainString())
+            binding.sumEditText.setText(model.sum.sumBigDecimal.toPlainString())
             viewModel.fillStateFromFinanceModel(model)
         }
     }

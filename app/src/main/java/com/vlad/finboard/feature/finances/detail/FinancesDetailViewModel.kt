@@ -82,7 +82,7 @@ class FinancesDetailViewModel @Inject constructor(
                     FinanceEntity(
                         id = UUID.randomUUID().toString(),
                         categoryId = state.selectedCategoryId,
-                        sum = sum.toDouble(),
+                        sum = sum.toBigDecimal(),
                         type = type,
                         createAt = System.currentTimeMillis()
                     )
@@ -102,7 +102,7 @@ class FinancesDetailViewModel @Inject constructor(
                     FinanceEntity(
                         id = model.id,
                         categoryId = state.selectedCategoryId,
-                        sum = sum.toDouble(),
+                        sum = sum.toBigDecimal(),
                         type = model.type,
                         createAt = model.createAt.dateMillis
                     )
