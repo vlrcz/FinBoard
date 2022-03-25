@@ -80,7 +80,7 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
             viewModel.pagingState.collect {
                 binding.progressBar.isVisible = it.loadingPage
                 financeListAdapter.submitList(it.itemsList)
-                binding.emptyListTextView.isVisible = it.itemsList.isEmpty()
+                binding.emptyListTextView.isVisible = if (it.loadingPage) false else it.itemsList.isEmpty()
             }
         }
     }

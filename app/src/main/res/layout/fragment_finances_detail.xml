@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:maxLines="1"
+            android:maxLength="10"
             android:textColor="@color/colorSecondary"/>
     </com.google.android.material.textfield.TextInputLayout>
 

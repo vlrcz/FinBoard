@@ -27,17 +27,7 @@ class CategoriesManager @Inject constructor(
         flow { emit(categoriesRepository.fetchCategoriesList()) }
             .catch { Timber.e("fetch categories from db error ${it.localizedMessage}") }
             .flowOn(Dispatchers.IO)
-            .map { it
-                .map { categoriesMapper.mapEntityToModel(it) }
-                .groupBy { it.type }
-                .mapValues {
-                    val list =
-                        it.value.mapIndexed { index, model ->
-                        model.copy(isSelected = index == 0)
-                    }
-                    list
-                } //todo Убрать в модель
-            }
+            .map { it.map { categoriesMapper.mapEntityToModel(it) }.groupBy { it.type } }
             .catch { Timber.e("map categories error ${it.localizedMessage}") }
             .flowOn(Dispatchers.Default)
             .collect { categoriesStateFlow.value = it }

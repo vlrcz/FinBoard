@@ -8,7 +8,6 @@ data class FinancesDetailState(
     val categoriesList: List<CategoryModel>,
     val selectedCategoryId: Int,
     val type: String,
-    val isSaveSuccess: Boolean,
     val sum: Double
 ) {
     companion object {

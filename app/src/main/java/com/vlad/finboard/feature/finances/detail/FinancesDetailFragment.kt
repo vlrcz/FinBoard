@@ -6,7 +6,6 @@ import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -30,7 +29,6 @@ import com.vlad.finboard.toast
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 
 class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
@@ -68,7 +66,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         val model = requireArguments().getParcelable(DETAIL) as? FinanceModel
         if (savedInstanceState == null) {
             if (type != null) viewModel.fetchCategoriesByType(type)
-            if (model != null) viewModel.restoreStateFromFinanceModel(model)
+            if (model != null) viewModel.fillStateFromFinanceModel(model)
         }
     }
 
@@ -84,12 +82,17 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         lifecycleScope.launchWhenStarted {
             viewModel.detailFlow.collect {
                 categoryListAdapter.submitList(it.categoriesList)
-                if (it.isSaveSuccess) {
-                    requireActivity().supportFragmentManager.setFragmentResult(DETAIL, Bundle())
-                    navigate(BackScreen())
-                }
                 if (it.sum != DEFAULT_SUM) {
                     binding.sumEditText.setText(it.sum.toBigDecimal().toPlainString())
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.saveSuccessFlow.collect {
+                if (it) {
+                    requireActivity().supportFragmentManager.setFragmentResult(DETAIL, Bundle())
+                    navigate(BackScreen())
                 }
             }
         }
@@ -99,7 +102,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         binding.saveBtn.setOnClickListener {
             val sum = binding.sumEditText.text.toString()
             if (sum.isNotBlank()) {
-                viewModel.saveFinance(sum = sum.toDouble())
+                viewModel.saveFinance(sum = sum)
             } else {
                 toast(getString(R.string.fill_fields))
             }
