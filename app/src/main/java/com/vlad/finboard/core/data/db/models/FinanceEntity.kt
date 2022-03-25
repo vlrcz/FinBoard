@@ -21,5 +21,5 @@ data class FinanceEntity(
     val sum: Double,
     val type: String,
     val createAt: Long,
-    val updateAt: Long
+    val updateAt: Long = System.currentTimeMillis()
 )

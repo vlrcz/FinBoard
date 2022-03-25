@@ -4,11 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vlad.finboard.core.data.db.models.FinanceEntity
 import com.vlad.finboard.feature.categories.CategoriesManager
-import com.vlad.finboard.feature.finances.detail.FinancesDetailState.Companion.DEFAULT_SUM
 import com.vlad.finboard.feature.finances.list.FinancesRepository
-import com.vlad.finboard.feature.finances.model.CategoryModel
 import com.vlad.finboard.feature.finances.model.FinanceModel
-import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
 import java.util.UUID
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -32,16 +29,12 @@ class FinancesDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var state = FinancesDetailState(
-        financeId = UUID.randomUUID().toString(),
-        createAt = System.currentTimeMillis(),
         categoriesList = emptyList(),
-        selectedCategoryId = -1,
-        type = COSTS.name,
-        sum = DEFAULT_SUM
+        selectedCategoryId = -1
     )
 
-    private val detailStateFlow = MutableStateFlow(state)
-    val detailFlow = detailStateFlow.asStateFlow()
+    private val categoriesStateFlow = MutableStateFlow(state)
+    val categoriesFlow = categoriesStateFlow.asStateFlow()
     private val saveSuccessSharedFlow = MutableSharedFlow<Boolean>()
     val saveSuccessFlow = saveSuccessSharedFlow.asSharedFlow()
 
@@ -63,21 +56,15 @@ class FinancesDetailViewModel @Inject constructor(
                         if (state.selectedCategoryId == -1) it[0].id else state.selectedCategoryId
                     state = state.copy(
                         categoriesList = it,
-                        selectedCategoryId = selectedCategoryId,
-                        type = type
+                        selectedCategoryId = selectedCategoryId
                     )
-                    detailStateFlow.value = state
+                    categoriesStateFlow.value = state
                 }
         }
     }
 
     fun fillStateFromFinanceModel(model: FinanceModel) {
-        state = state.copy(
-            financeId = model.id,
-            createAt = model.createAt.dateMillis,
-            sum = model.sum.sumDouble,
-            selectedCategoryId = model.categoryId
-        )
+        state = state.copy(selectedCategoryId = model.categoryId)
         fetchCategoriesByType(model.type)
     }
 
@@ -85,29 +72,46 @@ class FinancesDetailViewModel @Inject constructor(
         state = state.copy(
             selectedCategoryId = id,
             categoriesList = state.categoriesList.map { it.copy(isSelected = it.id == id) })
-        detailStateFlow.value = state
+        categoriesStateFlow.value = state
     }
 
-    fun saveFinance(sum: String) {
+    fun saveFinance(type: String, sum: String) {
         viewModelScope.launch {
             flow {
                 emit(
                     FinanceEntity(
-                        id = state.financeId,
+                        id = UUID.randomUUID().toString(),
                         categoryId = state.selectedCategoryId,
-                        sum = sum.toBigDecimal().toDouble(),
-                        type = state.type,
-                        createAt = state.createAt,
-                        updateAt = System.currentTimeMillis()
+                        sum = sum.toDouble(),
+                        type = type,
+                        createAt = System.currentTimeMillis()
                     )
                 )
             }
                 .onEach { financesRepository.saveFinance(it) }
                 .catch { Timber.d("save finance error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
-                .collect {
-                    saveSuccessSharedFlow.emit(true)
-                }
+                .collect { saveSuccessSharedFlow.emit(true) }
+        }
+    }
+
+    fun updateFinance(model: FinanceModel, sum: String) {
+        viewModelScope.launch {
+            flow {
+                emit(
+                    FinanceEntity(
+                        id = model.id,
+                        categoryId = state.selectedCategoryId,
+                        sum = sum.toDouble(),
+                        type = model.type,
+                        createAt = model.createAt.dateMillis
+                    )
+                )
+            }
+                .onEach { financesRepository.updateFinance(it) }
+                .catch { Timber.d("update finance error ${it.localizedMessage}") }
+                .flowOn(Dispatchers.IO)
+                .collect { saveSuccessSharedFlow.emit(true) }
         }
     }
 }

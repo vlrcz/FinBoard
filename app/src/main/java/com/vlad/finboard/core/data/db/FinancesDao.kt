@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.vlad.finboard.core.data.db.models.FinanceEntity
 import com.vlad.finboard.core.data.db.models.FinanceWithCategoryEntity
 
@@ -13,6 +14,9 @@ interface FinancesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFinance(finance: FinanceEntity)
+
+    @Update
+    suspend fun updateFinance(finance: FinanceEntity)
 
     @Transaction
     @Query(

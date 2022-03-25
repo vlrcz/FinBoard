@@ -21,7 +21,6 @@ import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.categories.adapter.CategoriesListAdapter
 import com.vlad.finboard.feature.finances.FinancesConstants
 import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
-import com.vlad.finboard.feature.finances.detail.FinancesDetailState.Companion.DEFAULT_SUM
 import com.vlad.finboard.feature.finances.detail.di.DaggerFinancesDetailComponent
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
@@ -60,31 +59,30 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
             .inject(this)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val type = requireArguments().getString(FinancesConstants.TYPE)
-        val model = requireArguments().getParcelable(DETAIL) as? FinanceModel
-        if (savedInstanceState == null) {
-            if (type != null) viewModel.fetchCategoriesByType(type)
-            if (model != null) viewModel.fillStateFromFinanceModel(model)
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindSaveButton()
         setEditTextFocusChangeListener()
         bindViewModel()
         initCategoriesList()
+
+        val type = requireArguments().getString(FinancesConstants.TYPE)
+        val model = requireArguments().getParcelable(DETAIL) as? FinanceModel
+
+        if (type != null) {
+            bindSaveButton(type)
+            viewModel.fetchCategoriesByType(type)
+        }
+        if (model != null) {
+            bindUpdateButton(model)
+            binding.sumEditText.setText(model.sum.sumDouble.toBigDecimal().toPlainString())
+            viewModel.fillStateFromFinanceModel(model)
+        }
     }
 
     private fun bindViewModel() {
         lifecycleScope.launchWhenStarted {
-            viewModel.detailFlow.collect {
+            viewModel.categoriesFlow.collect {
                 categoryListAdapter.submitList(it.categoriesList)
-                if (it.sum != DEFAULT_SUM) {
-                    binding.sumEditText.setText(it.sum.toBigDecimal().toPlainString())
-                }
             }
         }
 
@@ -98,11 +96,22 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
         }
     }
 
-    private fun bindSaveButton() {
+    private fun bindSaveButton(type: String) {
         binding.saveBtn.setOnClickListener {
             val sum = binding.sumEditText.text.toString()
             if (sum.isNotBlank()) {
-                viewModel.saveFinance(sum = sum)
+                viewModel.saveFinance(type = type, sum = sum)
+            } else {
+                toast(getString(R.string.fill_fields))
+            }
+        }
+    }
+
+    private fun bindUpdateButton(model: FinanceModel) {
+        binding.saveBtn.setOnClickListener {
+            val sum = binding.sumEditText.text.toString()
+            if (sum.isNotBlank()) {
+                viewModel.updateFinance(model = model, sum = sum)
             } else {
                 toast(getString(R.string.fill_fields))
             }
