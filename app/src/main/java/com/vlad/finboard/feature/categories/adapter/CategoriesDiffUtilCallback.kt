@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import com.vlad.finboard.feature.finances.model.CategoryModel
 
 class CategoriesDiffUtilCallback : ItemCallback<CategoryModel>() {
+
     override fun areItemsTheSame(oldItem: CategoryModel, newItem: CategoryModel): Boolean {
         return oldItem.id == newItem.id
     }
@@ -13,7 +14,6 @@ class CategoriesDiffUtilCallback : ItemCallback<CategoryModel>() {
     }
 
     override fun getChangePayload(oldItem: CategoryModel, newItem: CategoryModel): Any? {
-
-        return super.getChangePayload(oldItem, newItem)
+        return if (oldItem.isSelected != newItem.isSelected) true else null
     }
 }

@@ -32,15 +32,15 @@ class CategoriesListViewHolder(
         binding.categoryTxt.text = category.name
     }
 
+    fun bindSelectedState(category: CategoryModel) {
+        bindBackground(category)
+    }
+
     private fun bindBackground(category: CategoryModel) {
         if (category.isSelected) {
             binding.categoryImg.setBackgroundColor(category.color)
         } else {
             binding.categoryImg.background = null
         }
-    }
-
-    fun bind(category: CategoryModel, payload: List<Any>) {
-
     }
 }

@@ -25,7 +25,9 @@ class CategoriesListAdapter(
         payloads: MutableList<Any>
     ) {
         if (payloads.isNotEmpty()) {
-            holder.bind(getItem(position), payloads)
+            if (payloads[0] == true) {
+                holder.bindSelectedState(getItem(position))
+            }
         } else {
             super.onBindViewHolder(holder, position, payloads)
         }
