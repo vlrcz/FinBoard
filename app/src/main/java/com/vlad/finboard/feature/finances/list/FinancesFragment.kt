@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,14 +19,16 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.databinding.FragmentFinancesBinding
 import com.vlad.finboard.di.ViewModelFactory
-import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
+import com.vlad.finboard.feature.finances.FinancesConstants
 import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
+import com.vlad.finboard.feature.finances.detail.FinancesDetailViewModel
 import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
@@ -55,16 +58,18 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val type = requireArguments().getString(TYPE).toString()
-        viewModel.firstLoad(type)
+        val type = requireArguments().getString(TYPE)
+        if (type != null) {
+            viewModel.firstLoad(type)
+            bindOpenFinancesDetailBtn(type)
+        }
         bindViewModel()
         initList()
-        bindOpenFinancesDetailBtn(type)
         refreshListAfterDetail()
     }
 
     private fun refreshListAfterDetail() {
-        requireActivity().supportFragmentManager.setFragmentResultListener(DETAIL, this) { _, _ ->
+        requireActivity().supportFragmentManager.setFragmentResultListener(FinancesConstants.DETAIL, this) { _, _ ->
             viewModel.refresh()
             binding.financesList.scrollToPosition(0)
         }
@@ -73,17 +78,12 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
     private fun bindViewModel() {
         lifecycleScope.launchWhenStarted {
             viewModel.pagingState.collect {
-                updateLoadingState(it.loadingPage)
+                binding.progressBar.isVisible = it.loadingPage
                 financeListAdapter.submitList(it.itemsList)
-                if (it.itemsList.isNotEmpty()) {
-                    binding.emptyListTextView.visibility = View.GONE
-                } else {
-                    binding.emptyListTextView.visibility = View.VISIBLE
-                }
+                binding.emptyListTextView.isVisible = if (it.loadingPage) false else it.itemsList.isEmpty()
             }
         }
     }
-
 
     private fun bindOpenFinancesDetailBtn(type: String) {
         binding.openFinancesDetail.setOnClickListener {
@@ -110,9 +110,5 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
                 }
             })
         }
-    }
-
-    private fun updateLoadingState(isLoading: Boolean) {
-        binding.progressBar.isVisible = isLoading
     }
 }

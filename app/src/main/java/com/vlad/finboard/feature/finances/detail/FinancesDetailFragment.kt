@@ -3,10 +3,14 @@ package com.vlad.finboard.feature.finances.detail
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vlad.finboard.R
 import com.vlad.finboard.app.appComponent
@@ -14,20 +18,21 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.BackScreen
 import com.vlad.finboard.databinding.FragmentFinancesDetailBinding
 import com.vlad.finboard.di.ViewModelFactory
+import com.vlad.finboard.feature.categories.adapter.CategoriesListAdapter
+import com.vlad.finboard.feature.finances.FinancesConstants
 import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
-import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.detail.di.DaggerFinancesDetailComponent
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
 import com.vlad.finboard.toast
 import javax.inject.Inject
 import javax.inject.Provider
-import timber.log.Timber
+import kotlinx.coroutines.flow.collect
 
 class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
     companion object {
-        fun newInstance(finance: FinanceModel?): FinancesDetailFragment {
+        fun newInstance(finance: FinanceModel): FinancesDetailFragment {
             return FinancesDetailFragment().apply {
                 arguments = bundleOf(DETAIL to finance)
             }
@@ -35,7 +40,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
         fun newInstance(type: String): FinancesDetailFragment {
             return FinancesDetailFragment().apply {
-                arguments = bundleOf(TYPE to type)
+                arguments = bundleOf(FinancesConstants.TYPE to type)
             }
         }
     }
@@ -44,10 +49,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
     lateinit var viewModelProvider: Provider<FinancesDetailViewModel>
     private val viewModel: FinancesDetailViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
     private val binding: FragmentFinancesDetailBinding by viewBinding(FragmentFinancesDetailBinding::bind)
-    private var _categoryId: Int? = null
-    private var _createAt: Long? = null
-    private var _financeId: String? = null
-    private var _type: String? = null
+    private val categoryListAdapter = CategoriesListAdapter() { viewModel.clickedOnCategory(it.id) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,45 +61,57 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        bindSaveButton()
         setEditTextFocusChangeListener()
-        fillViewFromArguments()
-        val type = requireArguments().getString(TYPE)
-        if (type != null) _type = type
+        bindViewModel()
+        initCategoriesList()
+
+        val type = requireArguments().getString(FinancesConstants.TYPE)
+        val model = requireArguments().getParcelable(DETAIL) as? FinanceModel
+
+        if (type != null) {
+            bindSaveButton(type)
+            viewModel.fetchCategoriesByType(type)
+        }
+        if (model != null) {
+            bindUpdateButton(model)
+            binding.sumEditText.setText(model.sum.sumBigDecimal.toPlainString())
+            viewModel.fillStateFromFinanceModel(model)
+        }
     }
 
-    private fun fillViewFromArguments() {
-        if (arguments == null) return
-        val model = requireArguments().getParcelable(DETAIL) as? FinanceModel ?: return
-        _categoryId = model.categoryId
-        _createAt = model.createAt.dateMillis
-        _financeId = model.id
-        _type = model.type
-        binding.sumEditText.setText(model.sum.sumDouble.toString())
+    private fun bindViewModel() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.categoriesFlow.collect {
+                categoryListAdapter.submitList(it.categoriesList)
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.saveSuccessFlow.collect {
+                if (it) {
+                    requireActivity().supportFragmentManager.setFragmentResult(DETAIL, Bundle())
+                    navigate(BackScreen())
+                }
+            }
+        }
     }
 
-    private fun bindSaveButton() {
+    private fun bindSaveButton(type: String) {
         binding.saveBtn.setOnClickListener {
-            _categoryId = 1//todo убрать после добавления адаптера
-            val categoryId = _categoryId
-            val createAt = _createAt ?: System.currentTimeMillis()
-            val updateAt = System.currentTimeMillis()
-            val financeId = _financeId
-            val type = _type
-            val sum = binding.sumEditText.text?.toString()?.toDouble()
-            if (categoryId != null && sum != null && type != null) {
-                viewModel.saveFinance(
-                    financeId = financeId,
-                    categoryId = categoryId,
-                    sum = sum,
-                    type = type,
-                    createAt = createAt,
-                    updateAt = updateAt,
+            val sum = binding.sumEditText.text.toString()
+            if (sum.isNotBlank()) {
+                viewModel.saveFinance(type = type, sum = sum)
+            } else {
+                toast(getString(R.string.fill_fields))
+            }
+        }
+    }
 
-                )
-                requireActivity().supportFragmentManager.setFragmentResult(DETAIL, Bundle())
-                navigate(BackScreen())
+    private fun bindUpdateButton(model: FinanceModel) {
+        binding.saveBtn.setOnClickListener {
+            val sum = binding.sumEditText.text.toString()
+            if (sum.isNotBlank()) {
+                viewModel.updateFinance(model = model, sum = sum)
             } else {
                 toast(getString(R.string.fill_fields))
             }
@@ -109,6 +123,20 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
             if (!hasFocus) {
                 requireActivity().hideSoftKeyboard(v)
             }
+        }
+    }
+
+    private fun initCategoriesList() {
+        val dividerItemDecoration = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
+        val drawable = ResourcesCompat.getDrawable(resources, R.drawable.divider_categories, null)
+        if (drawable != null) {
+            dividerItemDecoration.setDrawable(drawable)
+        }
+
+        with(binding.categoriesList) {
+            adapter = categoryListAdapter
+            layoutManager = GridLayoutManager(requireContext(), 4)
+            addItemDecoration(dividerItemDecoration)
         }
     }
 }
