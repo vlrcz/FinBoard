@@ -22,6 +22,10 @@ import com.vlad.finboard.feature.finances.types.FinancesType.INCOME
 
 class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
 
+    companion object {
+        const val POSITION = "tab position"
+    }
+
     private val binding: FragmentTabBinding by viewBinding(FragmentTabBinding::bind)
     lateinit var navigator: TabFragmentNavigator
     private val tabConfig = TabConfig(mapOf(NavigationConstants.COSTS to 0, NavigationConstants.INCOME to 1))
@@ -50,9 +54,12 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigatorHolder {
         bindOnBackPressedCallback()
         bindTabLayout()
 
-        if (savedInstanceState == null) {
-            navigator.restoreState()
-        }
+        val tabPosition = savedInstanceState?.getInt(POSITION)
+        navigator.restoreState(tabPosition)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(POSITION, binding.tabLayout.selectedTabPosition)
     }
 
     private fun navigateTab(screen: FragmentScreen) {

@@ -34,6 +34,7 @@ class TabFragmentNavigator(
                 if (fragmentInContainer == null) {
                     super.navigate(screen.redirect)
                 } else {
+                    if (createdFragment == fragmentInContainer) return false
                     detach(fragmentInContainer)
                     if (createdFragment == null) {
                         super.navigate(screen.redirect)
@@ -61,7 +62,11 @@ class TabFragmentNavigator(
             .commit()
     }
 
-    fun restoreState() {
-        currentPosition?.let { tabSelectedListener.invoke(it) }
+    fun restoreState(position: Int?) {
+        if (position != null) {
+            tabSelectedListener.invoke(position)
+        } else {
+            currentPosition?.let { tabSelectedListener.invoke(it) }
+        }
     }
 }
