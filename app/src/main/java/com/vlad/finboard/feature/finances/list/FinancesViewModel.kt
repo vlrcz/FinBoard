@@ -52,7 +52,7 @@ class FinancesViewModel @Inject constructor(
                     state = state.copy(
                             hasMore = it.size >= PagingState.LIMIT_PER_PAGE,
                             pageCount = state.pageCount + 1,
-                            itemsList = (state.itemsList + it).distinct(),
+                            itemsList = if (state.pageCount == 1) it else state.itemsList + it,
                             loadingPage = false
                         )
                     pagingStateFlow.value = state
@@ -74,14 +74,12 @@ class FinancesViewModel @Inject constructor(
     }
 
     fun refresh() {
-        state = state.copy(pageCount = 1, hasMore = true, itemsList = emptyList(), loadingPage = true)
+        state = state.copy(pageCount = 1, hasMore = true, loadingPage = true)
         load()
     }
 
     private fun load() {
-        viewModelScope.launch {
-            pagingStateFlow.value = state
-            fetchFinances()
-        }
+        pagingStateFlow.value = state
+        fetchFinances()
     }
 }

@@ -1,4 +1,4 @@
-package com.vlad.finboard.feature.finances.categories
+package com.vlad.finboard.feature.categories
 
 import com.vlad.finboard.core.data.db.CategoriesDao
 import com.vlad.finboard.core.data.db.models.CategoryEntity
@@ -9,5 +9,9 @@ class CategoriesRepository @Inject constructor(
 ) {
     suspend fun fetchCategory(id: Int): CategoryEntity {
         return categoriesDao.fetchCategoryById(id)
+    }
+
+    suspend fun fetchCategoriesList(): List<CategoryEntity> {
+        return categoriesDao.fetchCategories()
     }
 }
