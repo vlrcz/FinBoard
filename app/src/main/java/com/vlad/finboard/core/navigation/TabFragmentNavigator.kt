@@ -2,6 +2,7 @@ package com.vlad.finboard.core.navigation
 
 import androidx.fragment.app.Fragment
 import com.vlad.finboard.R
+import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.core.navigation.screen.NavigationScreen
 import com.vlad.finboard.core.navigation.screen.TabScreen
 import com.vlad.finboard.core.tab.TabConfig
@@ -35,11 +36,10 @@ class TabFragmentNavigator(
                     super.navigate(screen.redirect)
                 } else {
                     if (createdFragment == fragmentInContainer) return false
-                    detach(fragmentInContainer)
                     if (createdFragment == null) {
-                        super.navigate(screen.redirect)
+                        detachWithReplace(fragmentInContainer, screen.redirect)
                     } else {
-                        attach(createdFragment)
+                        detachWithAttach(fragmentInContainer, createdFragment)
                     }
                 }
                 true
@@ -48,17 +48,19 @@ class TabFragmentNavigator(
         }
     }
 
-    private fun attach(fragment: Fragment) {
+    private fun detachWithReplace(detachedFragment: Fragment, screen: FragmentScreen) {
         fragmentManager
             .beginTransaction()
-            .attach(fragment)
+            .detach(detachedFragment)
+            .replace(R.id.tabContainer, screen.fragment, screen.tag)
             .commit()
     }
 
-    private fun detach(fragment: Fragment) {
+    private fun detachWithAttach(detachedFragment: Fragment, attachedFragment: Fragment) {
         fragmentManager
             .beginTransaction()
-            .detach(fragment)
+            .detach(detachedFragment)
+            .attach(attachedFragment)
             .commit()
     }
 
