@@ -2,6 +2,7 @@ package com.vlad.finboard.core.navigation
 
 import androidx.fragment.app.Fragment
 import com.vlad.finboard.R
+import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.core.navigation.screen.NavigationScreen
 import com.vlad.finboard.core.navigation.screen.TabScreen
 import com.vlad.finboard.core.tab.TabConfig
@@ -25,13 +26,49 @@ class TabFragmentNavigator(
                     tabSelectedListener.invoke(tabPosition)
                     currentPosition = tabPosition
                 }
-                super.navigate(screen.redirect)
+
+                val fragmentInContainer =
+                    fragmentManager.findFragmentById(R.id.tabContainer)
+                val createdFragment =
+                    fragmentManager.findFragmentByTag(screen.redirect.tag)
+
+                if (fragmentInContainer == null) {
+                    super.navigate(screen.redirect)
+                } else {
+                    if (createdFragment == fragmentInContainer) return false
+                    if (createdFragment == null) {
+                        detachWithReplace(fragmentInContainer, screen.redirect)
+                    } else {
+                        detachWithAttach(fragmentInContainer, createdFragment)
+                    }
+                }
+                true
             }
             else -> false
         }
     }
 
-    fun restoreState() {
-        currentPosition?.let { tabSelectedListener.invoke(it) }
+    private fun detachWithReplace(detachedFragment: Fragment, screen: FragmentScreen) {
+        fragmentManager
+            .beginTransaction()
+            .detach(detachedFragment)
+            .replace(R.id.tabContainer, screen.fragment, screen.tag)
+            .commit()
+    }
+
+    private fun detachWithAttach(detachedFragment: Fragment, attachedFragment: Fragment) {
+        fragmentManager
+            .beginTransaction()
+            .detach(detachedFragment)
+            .attach(attachedFragment)
+            .commit()
+    }
+
+    fun restoreState(position: Int?) {
+        if (position != null) {
+            tabSelectedListener.invoke(position)
+        } else {
+            currentPosition?.let { tabSelectedListener.invoke(it) }
+        }
     }
 }
