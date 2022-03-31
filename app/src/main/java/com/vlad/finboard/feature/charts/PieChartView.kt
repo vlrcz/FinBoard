@@ -15,7 +15,7 @@ class PieChartView(context: Context, attrs: AttributeSet? = null) : View(context
     private lateinit var pies: Map<Int, Float>
 
     @RequiresApi(VERSION_CODES.M)
-    val secondaryColor = context.getColor(R.color.colorSecondary)
+    val colorPrimary = context.getColor(R.color.colorPrimary)
 
     fun setValues(pieChartMap: Map<Int, Float>) {
         this.pies = pieChartMap
@@ -27,7 +27,7 @@ class PieChartView(context: Context, attrs: AttributeSet? = null) : View(context
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawColor(secondaryColor)
+        canvas.drawColor(colorPrimary)
         drawArcs(canvas)
         drawCenter(canvas)
     }
@@ -53,7 +53,7 @@ class PieChartView(context: Context, attrs: AttributeSet? = null) : View(context
     private fun drawCenter(canvas: Canvas) {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.FILL
-            color = secondaryColor
+            color = colorPrimary
         }
         val cx = (width / 2).toFloat()
         canvas.drawCircle(cx, cx, cx - 100f, paint)

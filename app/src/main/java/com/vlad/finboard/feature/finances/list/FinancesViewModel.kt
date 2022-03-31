@@ -26,8 +26,7 @@ class FinancesViewModel @Inject constructor(
         itemsList = emptyList(),
         hasMore = true,
         isFirstLoad = false,
-        type = COSTS.name,
-        pieChartMap = emptyMap()
+        type = COSTS.name
     )
 
     private val pagingStateFlow = MutableStateFlow(state)
@@ -53,24 +52,9 @@ class FinancesViewModel @Inject constructor(
                     state = state.copy(
                             hasMore = it.size >= PagingState.LIMIT_PER_PAGE,
                             pageCount = state.pageCount + 1,
-                            itemsList = if (state.pageCount == 1) it else state.itemsList + it,
+                            itemsList = if (state.pageCount == 1) it else (state.itemsList + it).distinct(),
                             loadingPage = false
                         )
-                    pagingStateFlow.value = state
-                }
-        }
-    }
-
-    private fun fetchAllFinances() {
-        viewModelScope.launch {
-            flow { emit(financesRepository.fetchAllFinancesWithCategoryByType(state.type)) }
-                .catch { Timber.d("fetch all notes error ${it.localizedMessage}") }
-                .flowOn(Dispatchers.IO)
-                .map { financesMapper.mapEntitiesToPieChartMap(it) }
-                .catch { Timber.d("map entity to pie chart map error ${it.localizedMessage}") }
-                .flowOn(Dispatchers.Default)
-                .collect {
-                    state = state.copy(pieChartMap = it)
                     pagingStateFlow.value = state
                 }
         }
@@ -79,7 +63,6 @@ class FinancesViewModel @Inject constructor(
     fun firstLoad(type: String) {
         if (!state.isFirstLoad) {
             state = state.copy(type = type, isFirstLoad = true, loadingPage = true)
-            fetchAllFinances()
             load()
         }
     }
@@ -92,7 +75,6 @@ class FinancesViewModel @Inject constructor(
 
     fun refresh() {
         state = state.copy(pageCount = 1, hasMore = true, loadingPage = true)
-        fetchAllFinances()
         load()
     }
 

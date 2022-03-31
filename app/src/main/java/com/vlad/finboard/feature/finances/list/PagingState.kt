@@ -8,8 +8,7 @@ data class PagingState(
     val itemsList: List<Item>,
     val hasMore: Boolean,
     val isFirstLoad: Boolean,
-    val type: String,
-    val pieChartMap: Map<Int, Float>
+    val type: String
 ) {
     val offset
         get() = (pageCount - 1) * LIMIT_PER_PAGE
