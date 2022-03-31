@@ -1,5 +1,7 @@
 package com.vlad.finboard.feature.finances.list
 
+import android.os.Build.VERSION_CODES
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
@@ -12,6 +14,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -26,7 +29,8 @@ class FinancesViewModel @Inject constructor(
         itemsList = emptyList(),
         hasMore = true,
         isFirstLoad = false,
-        type = COSTS.name
+        type = COSTS.name,
+        pieChartMap = emptyMap()
     )
 
     private val pagingStateFlow = MutableStateFlow(state)
@@ -50,10 +54,11 @@ class FinancesViewModel @Inject constructor(
                 .flowOn(Dispatchers.Default)
                 .collect {
                     state = state.copy(
-                            hasMore = it.size >= PagingState.LIMIT_PER_PAGE,
+                            hasMore = it.itemsList.size >= PagingState.LIMIT_PER_PAGE,
                             pageCount = state.pageCount + 1,
-                            itemsList = if (state.pageCount == 1) it else state.itemsList + it,
-                            loadingPage = false
+                            itemsList = if (state.pageCount == 1) it.itemsList else state.itemsList + it.itemsList,
+                            loadingPage = false,
+                            pieChartMap = it.pieChartMap
                         )
                     pagingStateFlow.value = state
                 }

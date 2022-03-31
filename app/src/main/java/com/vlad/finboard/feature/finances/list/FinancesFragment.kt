@@ -6,7 +6,6 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,16 +18,15 @@ import com.vlad.finboard.core.navigation.navigate
 import com.vlad.finboard.core.navigation.screen.FragmentScreen
 import com.vlad.finboard.databinding.FragmentFinancesBinding
 import com.vlad.finboard.di.ViewModelFactory
+import com.vlad.finboard.feature.charts.PieChartView
 import com.vlad.finboard.feature.finances.FinancesConstants
 import com.vlad.finboard.feature.finances.FinancesConstants.TYPE
 import com.vlad.finboard.feature.finances.adapter.FinanceListAdapter
 import com.vlad.finboard.feature.finances.detail.FinancesDetailFragment
-import com.vlad.finboard.feature.finances.detail.FinancesDetailViewModel
 import com.vlad.finboard.feature.finances.list.di.DaggerFinancesListComponent
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 
 class FinancesFragment : Fragment(R.layout.fragment_finances) {
 
@@ -47,6 +45,7 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
     private val financeListAdapter = FinanceListAdapter() {
         navigate(FragmentScreen(FinancesDetailFragment.newInstance(it), ADD))
     }
+    lateinit var pieView: PieChartView
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -66,11 +65,18 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
         bindViewModel()
         initList()
         refreshListAfterDetail()
+        addPieChartView()
+    }
+
+    private fun addPieChartView() {
+        pieView = PieChartView(requireContext())
+        binding.financesPieChart.addView(pieView)
     }
 
     private fun refreshListAfterDetail() {
         requireActivity().supportFragmentManager.setFragmentResultListener(FinancesConstants.DETAIL, this) { _, _ ->
             viewModel.refresh()
+            pieView.invalidate()
             binding.financesList.scrollToPosition(0)
         }
     }
@@ -81,6 +87,15 @@ class FinancesFragment : Fragment(R.layout.fragment_finances) {
                 binding.progressBar.isVisible = it.loadingPage
                 financeListAdapter.submitList(it.itemsList)
                 binding.emptyListTextView.isVisible = if (it.loadingPage) false else it.itemsList.isEmpty()
+                if (it.pieChartMap.isNotEmpty()) {
+                    binding.financesPieChart.isVisible = true
+                    pieView.apply {
+                        setValues(it.pieChartMap)
+                        invalidate()
+                    }
+                } else {
+                    binding.financesPieChart.isVisible = false
+                }
             }
         }
     }
