@@ -1,7 +1,5 @@
 package com.vlad.finboard.feature.finances.list
 
-import android.os.Build.VERSION_CODES
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vlad.finboard.feature.finances.types.FinancesType.COSTS
@@ -14,7 +12,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -36,30 +33,44 @@ class FinancesViewModel @Inject constructor(
     private val pagingStateFlow = MutableStateFlow(state)
     val pagingState = pagingStateFlow.asStateFlow()
 
-    private fun fetchFinances() {
+    private fun fetchLimitedFinances() {
         viewModelScope.launch {
             flow {
                 emit(
-                    financesRepository.fetchFinancesWithCategoryByType(
+                    financesRepository.fetchLimitedFinancesWithCategoryByType(
                         state.type,
                         PagingState.LIMIT_PER_PAGE,
                         state.offset
                     )
                 )
             }
-                .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
+                .catch { Timber.d("fetch notes with limit error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
-                .map { financesMapper.mapEntities(it) }
-                .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
+                .map { financesMapper.mapEntitiesToItems(it) }
+                .catch { Timber.d("map entity to items error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.Default)
                 .collect {
                     state = state.copy(
-                            hasMore = it.itemsList.size >= PagingState.LIMIT_PER_PAGE,
+                            hasMore = it.size >= PagingState.LIMIT_PER_PAGE,
                             pageCount = state.pageCount + 1,
-                            itemsList = if (state.pageCount == 1) it.itemsList else state.itemsList + it.itemsList,
-                            loadingPage = false,
-                            pieChartMap = it.pieChartMap
+                            itemsList = if (state.pageCount == 1) it else state.itemsList + it,
+                            loadingPage = false
                         )
+                    pagingStateFlow.value = state
+                }
+        }
+    }
+
+    private fun fetchAllFinances() {
+        viewModelScope.launch {
+            flow { emit(financesRepository.fetchAllFinancesWithCategoryByType(state.type)) }
+                .catch { Timber.d("fetch all notes error ${it.localizedMessage}") }
+                .flowOn(Dispatchers.IO)
+                .map { financesMapper.mapEntitiesToPieChartMap(it) }
+                .catch { Timber.d("map entity to pie chart map error ${it.localizedMessage}") }
+                .flowOn(Dispatchers.Default)
+                .collect {
+                    state = state.copy(pieChartMap = it)
                     pagingStateFlow.value = state
                 }
         }
@@ -68,6 +79,7 @@ class FinancesViewModel @Inject constructor(
     fun firstLoad(type: String) {
         if (!state.isFirstLoad) {
             state = state.copy(type = type, isFirstLoad = true, loadingPage = true)
+            fetchAllFinances()
             load()
         }
     }
@@ -80,11 +92,12 @@ class FinancesViewModel @Inject constructor(
 
     fun refresh() {
         state = state.copy(pageCount = 1, hasMore = true, loadingPage = true)
+        fetchAllFinances()
         load()
     }
 
     private fun load() {
         pagingStateFlow.value = state
-        fetchFinances()
+        fetchLimitedFinances()
     }
 }

@@ -17,7 +17,11 @@ class FinancesRepository @Inject constructor(
         financesDao.updateFinance(finance)
     }
 
-    suspend fun fetchFinancesWithCategoryByType(type: String, limit: Int, offset: Int): List<FinanceWithCategoryEntity> {
-        return financesDao.fetchFinancesWithCategoryByType(type, limit, offset)
+    suspend fun fetchLimitedFinancesWithCategoryByType(type: String, limit: Int, offset: Int): List<FinanceWithCategoryEntity> {
+        return financesDao.fetchLimitedFinancesWithCategoryByType(type, limit, offset)
+    }
+
+    suspend fun fetchAllFinancesWithCategoryByType(type: String): List<FinanceWithCategoryEntity> {
+        return financesDao.fetchAllFinancesWithCategoryByType(type)
     }
 }
