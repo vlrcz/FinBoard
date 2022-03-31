@@ -21,6 +21,7 @@ import com.vlad.finboard.di.ViewModelFactory
 import com.vlad.finboard.feature.categories.adapter.CategoriesListAdapter
 import com.vlad.finboard.feature.finances.FinancesConstants
 import com.vlad.finboard.feature.finances.FinancesConstants.DETAIL
+import com.vlad.finboard.feature.finances.FinancesConstants.TAB
 import com.vlad.finboard.feature.finances.detail.di.DaggerFinancesDetailComponent
 import com.vlad.finboard.feature.finances.model.FinanceModel
 import com.vlad.finboard.hideSoftKeyboard
@@ -90,6 +91,7 @@ class FinancesDetailFragment : Fragment(R.layout.fragment_finances_detail) {
             viewModel.saveSuccessFlow.collect {
                 if (it) {
                     requireActivity().supportFragmentManager.setFragmentResult(DETAIL, Bundle())
+                    requireActivity().supportFragmentManager.setFragmentResult(TAB, Bundle())
                     navigate(BackScreen())
                 }
             }

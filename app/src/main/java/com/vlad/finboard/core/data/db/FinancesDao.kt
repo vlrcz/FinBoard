@@ -23,5 +23,8 @@ interface FinancesDao {
         "SELECT * FROM finances WHERE finances.type = :type " +
                 "ORDER BY finances.createAt DESC LIMIT :limit OFFSET :offset"
     )
-    suspend fun fetchFinancesWithCategoryByType(type: String, limit: Int, offset: Int): List<FinanceWithCategoryEntity>
+    suspend fun fetchLimitedFinancesWithCategoryByType(type: String, limit: Int, offset: Int): List<FinanceWithCategoryEntity>
+
+    @Query("SELECT * FROM finances WHERE finances.type = :type")
+    suspend fun fetchAllFinancesWithCategoryByType(type: String): List<FinanceWithCategoryEntity>
 }

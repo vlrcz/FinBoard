@@ -2,7 +2,6 @@ package com.vlad.finboard.feature.finances.list
 
 import android.content.Context
 import android.graphics.Color
-import android.icu.util.UniversalTimeScale.toBigDecimal
 import com.vlad.finboard.R
 import com.vlad.finboard.core.data.db.models.CategoryEntity
 import com.vlad.finboard.core.data.db.models.FinanceEntity
@@ -43,7 +42,7 @@ class FinancesMapper @Inject constructor(
         )
     }
 
-    fun mapEntities(listEntity: List<FinanceWithCategoryEntity>): List<Item> {
+    fun mapEntitiesToItems(listEntity: List<FinanceWithCategoryEntity>): List<Item> {
         val map = LinkedHashMap<DateModel, MutableList<FinanceModel>>()
         listEntity.forEach {
             val finance = it.financeEntity
@@ -57,6 +56,19 @@ class FinancesMapper @Inject constructor(
             items.add(it.key)
             items.addAll(it.value)
             items
+        }
+    }
+
+    fun mapEntitiesToPieChartMap(listEntity: List<FinanceWithCategoryEntity>): Map<Int, Float> {
+        val map = mutableMapOf<Int, Float>()
+        var total = 0f
+        listEntity.forEach {
+            total += it.financeEntity.sum.toFloat()
+            val categoryColor = Color.parseColor(it.categoryEntity.color)
+            map.merge(categoryColor, it.financeEntity.sum.toFloat(), Float::plus)
+        }
+        return map.mapValues {
+            it.value * 360 / total
         }
     }
 }

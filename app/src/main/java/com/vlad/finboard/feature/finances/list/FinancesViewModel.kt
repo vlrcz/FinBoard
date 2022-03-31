@@ -32,27 +32,27 @@ class FinancesViewModel @Inject constructor(
     private val pagingStateFlow = MutableStateFlow(state)
     val pagingState = pagingStateFlow.asStateFlow()
 
-    private fun fetchFinances() {
+    private fun fetchLimitedFinances() {
         viewModelScope.launch {
             flow {
                 emit(
-                    financesRepository.fetchFinancesWithCategoryByType(
+                    financesRepository.fetchLimitedFinancesWithCategoryByType(
                         state.type,
                         PagingState.LIMIT_PER_PAGE,
                         state.offset
                     )
                 )
             }
-                .catch { Timber.d("fetch notes error ${it.localizedMessage}") }
+                .catch { Timber.d("fetch notes with limit error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.IO)
-                .map { financesMapper.mapEntities(it) }
-                .catch { Timber.d("map entity to model error ${it.localizedMessage}") }
+                .map { financesMapper.mapEntitiesToItems(it) }
+                .catch { Timber.d("map entity to items error ${it.localizedMessage}") }
                 .flowOn(Dispatchers.Default)
                 .collect {
                     state = state.copy(
                             hasMore = it.size >= PagingState.LIMIT_PER_PAGE,
                             pageCount = state.pageCount + 1,
-                            itemsList = if (state.pageCount == 1) it else state.itemsList + it,
+                            itemsList = if (state.pageCount == 1) it else (state.itemsList + it).distinct(),
                             loadingPage = false
                         )
                     pagingStateFlow.value = state
@@ -80,6 +80,6 @@ class FinancesViewModel @Inject constructor(
 
     private fun load() {
         pagingStateFlow.value = state
-        fetchFinances()
+        fetchLimitedFinances()
     }
 }
